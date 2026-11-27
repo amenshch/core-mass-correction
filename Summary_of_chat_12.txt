@@ -1,0 +1,41 @@
+Verification first
+
+I found and fixed one problem: the staged mass_correction_pipeline_5.py was stale, predating both the angular fourth axis and the local-range bound. It is now the current version, verified to contain brentq, LocalLinear, LL_BOUND, SNR_MIN_PEAK, CAP_FFLUX, GRID_DISTANCE_PC, and GetsfTable, and it compiles.
+
+rt_mass_correction_method.tex is current. rt_mass_correction.tex, the companion draft, was never touched — no changes exist to save.
+
+Definite findings
+
+Four defects found and fixed in the pipeline. The per-band footprint solver used an unguarded fixed-point iteration whose map has negative derivative exceeding unity, so it oscillated in 71.9% of calls and returned unconverged iterates in 23.4%, making R_λ non-monotonic in r for 80–91% of nodes. Replaced by bracketed root finding. The Delaunay interpolator was replaced by local linear regression. The two output constraints were removed as inert. The SED band selection used getsf's per-band SIGNM, which records where a source was detected rather than whether its fluxes are usable; replaced by your recommended thresholds of 2 on peak and total signal-to-noise.
+
+The fourth axis must be angular, not physical. C_M = M_BE/M_reported is a ratio in which d² cancels exactly, and every remaining quantity is an angle. Converting the footprint radius to parsecs at each source's distance produced a spurious distance trend: across seven clouds spanning 139 to 2000 pc the median correction ranged over a factor of 1.70 correlating with log d at 0.958, against 1.12 and 0.464 with the angular axis. The single-distance grid could never have revealed this.
+
+Measured performance, node-level leave-one-out: scatter from a factor of 1.42 with 95% of nodes within a factor of two, to 1.108 with 100%. Explained variance 31% → 83%. Three observables alone explain about 15% and are no better than not correcting.
+
+Seven clouds, angular axis: median C_M 1.13 to 1.27, summed mass ratios 1.15 to 1.34, consistent with the established 1.23–1.31.
+
+The correction rescales the core mass function; it does not steepen it. Slope changes of −0.09 to +0.01 across six clouds, because C_M is flat with mass in real data even though it rises steeply with mass on the grid.
+
+Two results with the old numbers now invalid: F_flux no longer dominates the error budget (1.09, 1.11, 1.13 for F_flux, F_bg, F_temp against 1.65, 1.30, 1.06), so the §4 passage motivating the fourth observable from it needs rewriting.
+
+Injection findings: detection is governed by angular size, not mass; detected cores sit on local enhancements and undetected ones in depressions, so the surviving sample is biased toward over-estimated masses; the model grid cannot reproduce the real joint distribution of mass, background, and contrast, which is the open problem for the next chat.
+
+Method paper state
+
+Revised: §3.2 (solver, with the correction documented), §3.3 (estimator, machine-learning terms defined inline), §3.4 (angular fourth axis, with the analytic argument), abstract, conclusions, Appendix B. Italics per your convention. Four \draftnote{} markers.
+
+Not done: §4 and Table 1 in full, Appendix C (superseded), fig_validation, the flowchart content, and the entire companion draft.
+
+Files to upload to the new chat
+
+Essential: mass_correction_pipeline_5.py, getsf_columns.py, patch_run_inject_v2.py, check_injection_match.py, joint_target_Aquila.txt, rt_mass_correction_method.tex, rt_mass_correction.tex.
+
+Analysis: cmf_mle.py, loo_solverfix.py, estimator_compare.py, check_separation.py.
+
+Figures: aa_plotstyle.py, make_fig_degeneracy.py, make_fig_factor_decomposition.py, make_fig_grid_coverage.py, make_fig_validation.py, make_flowchart_mpl.py.
+
+Also needed: the grid catalogues and recovery tables v3, and run_inject.py for regenerating v2.
+
+Where the placement problem stands
+
+The band constraint is correct in principle — a model may only sit where the local column lies in [SD_emb, √2·SD_emb) — and enforcing it raised the two-dimensional overlap from 0.318 to 0.612. But it collapsed the mass match to 0.745 dex, a factor of 5.6, because one SD_emb rung with R_BE restricted to 15–50 arcsec leaves too few candidates. The unresolved question for the new chat is whether any assignment of the eligible nodes can reproduce the real joint distribution, or whether the grid needs extending.
