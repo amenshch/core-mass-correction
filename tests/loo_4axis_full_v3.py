@@ -53,14 +53,8 @@ Three edits, none of which touches the test itself:
      the checkpoint file name and the output file name;
   c. a --max-nodes option was added for timing a subset.
 
-USAGE
-    Put in the same directory as this script:
-        mass_correction_pipeline_6.py
-        getsf_columns.py
-        bes_model_grid_final3_catalog
-        bes_model_grid_final3_recovery_tables
-    then:
-        python3 loo_4axis_full_v3.py
+USAGE (repository layout; the grid files default to those of method/paths.py)
+        python3 tests/loo_4axis_full_v3.py
 
     To reproduce the final2 baseline with exactly this code:
         python3 loo_4axis_full_v3.py \
@@ -99,13 +93,15 @@ import pickle
 import sys
 import time
 
-sys.path.insert(0, '.')
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                                '..', 'method'))
 import numpy as np                                     # noqa: E402
-import mass_correction_pipeline_6 as mc                # noqa: E402
+import mass_correction_pipeline_7 as mc                # noqa: E402
+import paths                                           # noqa: E402
 
 lg = np.log10
-CATALOG_DEFAULT = 'bes_model_grid_final3_catalog'
-RECTAB_DEFAULT = 'bes_model_grid_final3_recovery_tables'
+CATALOG_DEFAULT = paths.GRID_CATALOG
+RECTAB_DEFAULT = paths.GRID_RECTAB
 CKPT_DEFAULT = 'loo4d_checkpoint_v3.pkl'
 REP_RFOOT = 1.84          # grid-typical footprint factor, used to pick one
                           # representative sample per node
@@ -114,14 +110,11 @@ GRID_DISTANCE_PC = mc.GRID_DISTANCE_PC
 
 
 def check_inputs(catalog, rectab):
-    missing = [f for f in (catalog, rectab, 'mass_correction_pipeline_6.py')
-               if not os.path.exists(f)]
+    missing = [f for f in (catalog, rectab) if not os.path.exists(f)]
     if missing:
-        print('ERROR: required file(s) not found in the current directory:')
+        print('ERROR: required file(s) not found:')
         for f in missing:
             print('  - %s' % f)
-        print('\nCopy them into this directory (no cats/ or python/ '
-              'subdirectory needed) and re-run.')
         sys.exit(1)
 
 

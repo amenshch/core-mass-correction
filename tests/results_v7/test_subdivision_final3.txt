@@ -1,0 +1,18 @@
+Building correctors (3-axis, 4-axis, and diagnostic grids)...
+Building recovery samples from /home/claude/amenshch/core-mass-correction/data/grid/bes_model_grid_final3_catalog + /home/claude/amenshch/core-mass-correction/data/grid/bes_model_grid_final3_recovery_tables ...
+Recovery samples built: 30022 samples from 1597/1840 nodes, in 14.5s
+Correctors built (30022 training samples).
+Building recovery samples from /home/claude/amenshch/core-mass-correction/data/grid/bes_model_grid_final3_subdivision_catalog + /home/claude/amenshch/core-mass-correction/data/grid/bes_model_grid_final3_subdivision_recovery_tables ...
+Recovery samples built: 26779 samples from 1400/1605 nodes, in 11.3s
+=== test on model grid: bes_model_grid_final3_subdivision_catalog ===
+  correctors trained on 30022 samples of the main grid
+  test samples: 26779 usable, 26779 with both corrections, 1400 nodes
+  ratio = mass obtained / true M_BE;  scatter = 10**std(log10 ratio);  error = median |log10 ratio| (dex)
+  all samples (n = 26779):
+    uncorrected              median 0.766   scatter 1.330   error 0.116 dex   within 2x  89.9%
+    three observables        median 1.039   scatter 1.277   error 0.048 dex   within 2x  97.3%
+    four observables         median 1.010   scatter 1.123   error 0.026 dex   within 2x 100.0%
+  one sample per node (n = 1400):
+    uncorrected              median 0.810   scatter 1.404   error 0.092 dex   within 2x  88.2%
+    three observables        median 1.055   scatter 1.352   error 0.058 dex   within 2x  94.3%
+    four observables         median 1.007   scatter 1.115   error 0.026 dex   within 2x 100.0%

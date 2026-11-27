@@ -1,0 +1,30 @@
+!__________________________________________________________________________________________
+!
+! MASS-CORRECTION RUN SUMMARY  (one line per field)
+! R_foot = symmetric   opacity const K = 5.3261e-24   SED bands = 160,250,350,500
+!
+!__________________________________________________________________________________________
+!
+! TABULATED QUANTITIES:
+!
+! 1 FIELD            Cloud / field name
+! 2 DIST        pc   Adopted distance
+! 3 N_CORR           Number of corrected QUALITY==ok sources in the model hull
+! 4 R_FOOT           Median footprint-to-size ratio over ok sources
+! 5 C_M              Median correction factor M_BE/M_reported, four observables
+! 6 C_M_3D           Median correction factor, three observables
+! 7 F_FLUX           Median flux-recovery factor of C_M_3D
+! 8 F_BG             Median background-subtraction factor of C_M_3D
+! 9 F_TEMP           Median residual factor of C_M_3D
+! 10 C_M_0.1_2        Median C_M over reported mass 0.1-2 Msun
+! 11 C_M_MASS         Median mass-indexed factor (distance-dependent; diagnostic)
+!__________________________________________________________________________________________
+!
+!    FIELD   DIST  N_CORR  R_FOOT     C_M  C_M_3D  F_FLUX    F_BG  F_TEMP C_M_0.1_2  C_M_MASS
+  Scorpius    130     144    1.87   1.278   1.358    1.10   1.015   1.137      1.22      1.23
+  Ophiuchus    144     581    1.87   1.271   1.397    1.09   1.021   1.174      1.22      1.22
+    Aquila    260     778    1.83   1.248   1.430    1.13   1.048   1.145      1.23      1.21
+    OrionA    432     949    1.86   1.256   1.422    1.12   1.033   1.166      1.25      1.29
+  California    470     654    1.94   1.298   1.414    1.10   1.020   1.178      1.29      1.27
+   CygnusX   1150    1639    2.08   1.205   1.392    1.07   1.100   1.114      1.22      1.45
+    W3W4W5   1700    1196    1.94   1.298   1.448    1.14   1.020   1.196      1.33      1.45

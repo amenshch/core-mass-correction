@@ -27,7 +27,9 @@ Earlier development history (chats 1-14 and the hires work) is in the archive re
 ## Files
 
 ### method/
-- `mass_correction_pipeline_6.py` — the pipeline: SED refit (S/N > 1.5 in peak and total flux, at least 3 bands), three- and four-observable correctors (local linear regression, K = 320), convex-hull domain flag `IN_DOMAIN`, per-cloud corrected catalog. Modes: `correct`, `loo`, `cmloo`, `test`.
+- `paths.py` — locations of all data files; every script takes its default inputs from here (final3 grid). Run it to check that all files exist.
+- `mass_correction_pipeline_7.py` — the current pipeline: as version 6, but with inputs from `paths.py`, the four-observable factor as the primary output `C_M` (three-observable factor kept as `C_M_3D`), and a `test` mode reporting both correctors on the subdivision grid.
+- `mass_correction_pipeline_6.py` — previous version, kept for reproducing chat-14 runs: the pipeline: SED refit (S/N > 1.5 in peak and total flux, at least 3 bands), three- and four-observable correctors (local linear regression, K = 320), convex-hull domain flag `IN_DOMAIN`, per-cloud corrected catalog. Modes: `correct`, `loo`, `cmloo`, `test`.
 - `fit_mass.py` — class `CMInvariantCorrector`.
 - `getsf_columns.py` — reads getsf catalog columns by header position.
 - `getsf_bg.py` — background helper used by the injection code.

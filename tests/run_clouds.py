@@ -1,17 +1,19 @@
 #!/usr/bin/env python3
 """
-run_clouds.py -- multi-cloud driver for mass_correction_pipeline.
+run_clouds.py -- multi-cloud driver for mass_correction_pipeline_7.
 
 Loops over a set of clouds, runs the single-cloud pipeline on each (writing one
 per-source corrected catalogue per cloud), and writes a run-summary table (the
 seven-cloud Table 1) in the same aligned getsf style.
 
 Usage:
-    python run_clouds.py [--outdir DIR]
+    python tests/run_clouds.py [--outdir DIR]
 
-Edit CLOUDS below for your own fields.  Each entry is (name, distance_pc); the
-getsf input for a cloud is resolved from its <name>-Guoyin/ directory
-(concatenated catalogue if present, else the raw .cat + .add.cat pair).
+The clouds and distances are paths.CLOUDS; the getsf input for a cloud is
+resolved from data/clouds/<name>/ (concatenated catalog if present, else the
+raw .cat + .add.cat pair).  C_M is the four-observable correction factor
+adopted in the paper; C_M_3D, the three-observable one, is given for
+comparison, and F_FLUX, F_BG, F_TEMP decompose C_M_3D.
 """
 import argparse
 import os
@@ -19,21 +21,22 @@ import sys
 
 import numpy as np
 
-sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-import mass_correction_pipeline_4d as mc
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                                '..', 'method'))
+import mass_correction_pipeline_7 as mc                # noqa: E402
+import paths                                           # noqa: E402
 
-CLOUDS = [('Scorpius', 130), ('Ophiuchus', 144), ('Aquila', 260),
-          ('OrionA', 432), ('California', 470), ('CygnusX', 1150),
-          ('W3W4W5', 1700)]
+CLOUDS = paths.CLOUDS
 
 SUMCOLS = [('FIELD', '%-11s', '', 'Cloud / field name'),
            ('DIST', '%6.0f', 'pc', 'Adopted distance'),
            ('N_CORR', '%7d', '', 'Number of corrected QUALITY==ok sources in the model hull'),
            ('R_FOOT', '%7.2f', '', 'Median footprint-to-size ratio over ok sources'),
-           ('C_M', '%7.2f', '', 'Median total correction factor M_BE/M_reported'),
-           ('F_FLUX', '%7.2f', '', 'Median flux-recovery mass factor'),
-           ('F_BG', '%7.3f', '', 'Median background-subtraction mass factor'),
-           ('F_TEMP', '%7.3f', '', 'Median temperature-bias mass factor'),
+           ('C_M', '%7.3f', '', 'Median correction factor M_BE/M_reported, four observables'),
+           ('C_M_3D', '%7.3f', '', 'Median correction factor, three observables'),
+           ('F_FLUX', '%7.2f', '', 'Median flux-recovery factor of C_M_3D'),
+           ('F_BG', '%7.3f', '', 'Median background-subtraction factor of C_M_3D'),
+           ('F_TEMP', '%7.3f', '', 'Median residual factor of C_M_3D'),
            ('C_M_0.1_2', '%9.2f', '', 'Median C_M over reported mass 0.1-2 Msun'),
            ('C_M_MASS', '%9.2f', '', 'Median mass-indexed factor (distance-dependent; diagnostic)')]
 
@@ -62,26 +65,27 @@ def write_summary(rows, path):
 def main():
     ap = argparse.ArgumentParser(description=__doc__,
                                  formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument('--outdir', default='corrected')
+    ap.add_argument('--outdir', default=os.path.join(paths.RESULTS_DIR, 'clouds_v7'))
     a = ap.parse_args()
     os.makedirs(a.outdir, exist_ok=True)
 
     rows = []
-    print("%-11s %6s %7s %7s %7s %7s %7s %7s %9s %9s"
-          % ('field', 'dist', 'N_corr', 'R_foot', 'C_M', 'F_flux', 'F_bg', 'F_temp',
-             'C_M0.1-2', 'C_M^mass'))
+    print("%-11s %6s %7s %7s %7s %7s %7s %7s %7s %9s %9s"
+          % ('field', 'dist', 'N_corr', 'R_foot', 'C_M', 'C_M_3D', 'F_flux', 'F_bg',
+             'F_temp', 'C_M0.1-2', 'C_M^mass'))
     for name, dist in CLOUDS:
         inp = mc.cloud_input(name)
         table, s = mc.correct_cloud(inp, dist)
         out = os.path.join(a.outdir, '%s.corrected.cat' % name)
         n = mc.write_catalog(table, out, name, dist)
         rows.append(dict(FIELD=name, DIST=dist, N_CORR=n,
-                         R_FOOT=s['Rfoot_ok'], C_M=s['C_M'], F_FLUX=s['F_flux'],
+                         R_FOOT=s['Rfoot_ok'], C_M=s['C_M'], C_M_3D=s['C_M_3D'],
+                         F_FLUX=s['F_flux'],
                          F_BG=s['F_bg'], F_TEMP=s['F_temp'],
                          **{'C_M_0.1_2': s['C_M_0p1_2'], 'C_M_MASS': s['C_Mmass']}))
-        print("%-11s %6.0f %7d %7.2f %7.2f %7.2f %7.3f %7.3f %9.2f %9.2f"
-              % (name, dist, n, s['Rfoot_ok'], s['C_M'], s['F_flux'], s['F_bg'],
-                 s['F_temp'], s['C_M_0p1_2'], s['C_Mmass']))
+        print("%-11s %6.0f %7d %7.2f %7.3f %7.3f %7.2f %7.3f %7.3f %9.2f %9.2f"
+              % (name, dist, n, s['Rfoot_ok'], s['C_M'], s['C_M_3D'], s['F_flux'],
+                 s['F_bg'], s['F_temp'], s['C_M_0p1_2'], s['C_Mmass']))
     write_summary(rows, os.path.join(a.outdir, 'run_summary.cat'))
     print("\nwrote %d catalogues + run_summary.cat to %s/" % (len(rows), a.outdir))
 
