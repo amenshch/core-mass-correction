@@ -1,0 +1,28 @@
+Building recovery samples from cats/bes_model_grid_final3_catalog + cats/bes_model_grid_final3_recovery_tables ...
+Recovery samples built: 30022 samples from 1597/1840 nodes, in 12.3s
+nodes = 1597, samples = 30022, representative footprint ratio = 1.84
+
+Stability classification, scored against the true xi_max of each model.
+"super-critical found" is the percentage of truly super-critical nodes so called;
+"sub-critical kept" is the percentage of truly sub-critical nodes so called.
+
+  truly super-critical: 40.8% of the 1597 nodes scored, so always answering with the
+  commoner class would score 59.2%
+
+  conventional criterion, reported mass      n= 1597  accuracy  73.6%  super-critical found 100.0%  sub-critical kept  55.4%
+  conventional criterion, corrected mass     n= 1597  accuracy  70.3%  super-critical found 100.0%  sub-critical kept  49.8%
+  grid inversion of xi_max, node withheld    n= 1597  accuracy  85.7%  super-critical found  81.3%  sub-critical kept  88.8%
+
+  For reference, the ratio of the Gaussian-deconvolved diameter to the true
+  Bonnor-Ebert diameter has median 0.54 and spans 0.14 to 0.78 between its
+  tenth and ninetieth percentiles over 1597 nodes.
+
+Inference of temperature from the same four observables, node withheld.
+The error is the median absolute difference between the inferred and the true
+value, in kelvin, and as the median absolute base-ten logarithm of the ratio.
+
+  isothermal model temperature T_BE        n= 1597  median error  0.39 K   0.017 dex
+  mass-averaged dust temperature Td_avg    n= 1597  median error  0.19 K   0.007 dex
+  fitted spectral temperature, as reference n= 1597  median error  0.28 K   0.011 dex
+  (the last line is the error an observer incurs by adopting the temperature
+  from the fit to the spectral energy distribution as the mass-averaged one)

@@ -1,0 +1,23 @@
+Building recovery samples from cats/bes_model_grid_final3_catalog + cats/bes_model_grid_final3_recovery_tables ...
+Recovery samples built: 30022 samples from 1597/1840 nodes, in 18.5s
+samples 30022 on 1597 nodes; truly super-critical 40.2%; median footprint ratio 1.84
+
+Stability classification, all samples, node withheld.  "found" is the percentage
+of truly super-critical samples so called, "kept" the percentage of truly
+sub-critical samples so called.  Columns after the bar: accuracy in bins of the
+measured footprint ratio phi = 1.0-1.4, 1.4-1.7, 1.7-1.9, 1.9-2.1, 2.1-2.5, 2.5-4.0.
+
+  branch classifier, probability > 0.5         overall  89.2%  found  84.9%  kept  92.1%  |  96.5  82.1  81.3  85.2  90.5  94.3
+  branch classifier, probability > 0.05        overall  66.4%  found  98.9%  kept  44.5%  |  74.3  44.5  62.1  68.0  71.8  77.1
+  conventional, deconvolved size, alpha <= 2   overall  73.4%  found 100.0%  kept  55.6%  |  83.0  55.8  69.0  73.5  76.6  81.1
+  conventional, measured size, alpha <= 2      overall  75.7%  found  98.0%  kept  60.8%  |  84.4  57.6  72.0  77.1  79.2  83.8
+  conventional, measured size, alpha <= 1      overall  85.8%  found  87.9%  kept  84.5%  |  95.5  83.5  79.8  80.9  82.7  85.9
+  best threshold with the deconvolved  size: alpha <= 0.75, accuracy 88.8% over 30022 samples
+      within phi 1.7 to 1.9: alpha <= 0.80, accuracy 84.0% over 3543 samples
+      within phi 1.9 to 2.1: alpha <= 0.75, accuracy 83.1% over 2540 samples
+  best threshold with the measured     size: alpha <= 0.80, accuracy 87.3% over 30022 samples
+      within phi 1.7 to 1.9: alpha <= 0.80, accuracy 83.0% over 3543 samples
+      within phi 1.9 to 2.1: alpha <= 0.90, accuracy 81.4% over 2540 samples
+
+  ratio of the measured half-width to the true Bonnor-Ebert radius: median 0.66
+  ratio of the deconvolved half-width to the same: median 0.54

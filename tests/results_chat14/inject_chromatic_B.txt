@@ -1,0 +1,10 @@
+training: 30022 samples on 1597 nodes, 40.2% super-critical
+
+
+Test B: leave-one-node-out inversion of other quantities, with and without the
+per-band size ratios.  The error is the median absolute base-ten logarithm of
+the ratio of the inferred to the true value, in decimal exponents.
+
+  mass factor C_M             four  0.028 dex  plus sizes  0.015 dex
+  truncation radius xi_max    four  0.177 dex  plus sizes  0.015 dex
+  temperature factor C_T      four  0.003 dex  plus sizes  0.001 dex

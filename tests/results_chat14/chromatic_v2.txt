@@ -1,0 +1,53 @@
+Building recovery samples from cats/bes_model_grid_final3_catalog + cats/bes_model_grid_final3_recovery_tables ...
+Recovery samples built: 30022 samples from 1597/1840 nodes, in 12.4s
+training samples with all width ratios finite: 13132 on 1106 nodes, 43.8% super-critical
+
+median model width ratios: 250/SD 1.123, 350/250 0.973, 500/250 0.973
+
+Grid test, leave-one-node-out.  Columns after the bar: accuracy in bins of the
+measured footprint factor phi = 1.0-1.4, 1.4-1.7, 1.7-1.9, 1.9-2.1, 2.1-2.5, 2.5-4.0.
+
+  four observables                       accuracy  92.8%  found  92.9%  kept  92.8%  |  99.8  91.6  81.9  81.3  91.2  97.8
+  four plus profile width ratios         accuracy  95.9%  found  94.9%  kept  96.7%  |  99.8  93.8  90.5  92.3  95.9  97.9
+Building correctors (3-axis, 4-axis, and diagnostic grids)...
+Building recovery samples from cats/bes_model_grid_final2_catalog + cats/bes_model_grid_final2_recovery_tables_v2 ...
+Recovery samples built: 7497 samples from 403/473 nodes, in 2.8s
+Correctors built (7497 training samples).
+Correcting cloud: ['Aquila-injections/260811_cmf2p00_n600_s2030/Aquila.s.sources.ok.cat', 'Aquila-injections/260811_cmf2p00_n600_s2030/Aquila.s.sources.ok.add.cat']  (distance=260.0 pc)
+Cloud corrected: 129 sources, median C_M=1.429, median R_foot=1.734
+Correcting cloud: ['Aquila-injections/260811_cmf2p00_n600_s2030_flat/Aquila.s.sources.ok.cat', 'Aquila-injections/260811_cmf2p00_n600_s2030_flat/Aquila.s.sources.ok.add.cat']  (distance=260.0 pc)
+Cloud corrected: 127 sources, median C_M=1.429, median R_foot=1.722
+Correcting cloud: ['Aquila-injections/260811_cmf2p00_n600_s2030_iso/Aquila.s.sources.ok.cat', 'Aquila-injections/260811_cmf2p00_n600_s2030_iso/Aquila.s.sources.ok.add.cat']  (distance=260.0 pc)
+Cloud corrected: 133 sources, median C_M=1.434, median R_foot=1.713
+Correcting cloud: ['Aquila-injections/260811_cmf2p00_n600_s2030_flat_iso/Aquila.s.sources.ok.cat', 'Aquila-injections/260811_cmf2p00_n600_s2030_flat_iso/Aquila.s.sources.ok.add.cat']  (distance=260.0 pc)
+Cloud corrected: 127 sources, median C_M=1.429, median R_foot=1.716
+Correcting cloud: ['Aquila-injections/260812_cmf2p00_n600_s2031/Aquila.s.sources.ok.cat', 'Aquila-injections/260812_cmf2p00_n600_s2031/Aquila.s.sources.ok.add.cat']  (distance=260.0 pc)
+Cloud corrected: 131 sources, median C_M=1.428, median R_foot=1.733
+Correcting cloud: ['Aquila-injections/260812_cmf2p00_n600_s2031_flat/Aquila.s.sources.ok.cat', 'Aquila-injections/260812_cmf2p00_n600_s2031_flat/Aquila.s.sources.ok.add.cat']  (distance=260.0 pc)
+Cloud corrected: 131 sources, median C_M=1.425, median R_foot=1.738
+Correcting cloud: ['Aquila-injections/260812_cmf2p00_n600_s2031_iso/Aquila.s.sources.ok.cat', 'Aquila-injections/260812_cmf2p00_n600_s2031_iso/Aquila.s.sources.ok.add.cat']  (distance=260.0 pc)
+Cloud corrected: 125 sources, median C_M=1.428, median R_foot=1.723
+Correcting cloud: ['Aquila-injections/260812_cmf2p00_n600_s2031_flat_iso/Aquila.s.sources.ok.cat', 'Aquila-injections/260812_cmf2p00_n600_s2031_flat_iso/Aquila.s.sources.ok.add.cat']  (distance=260.0 pc)
+Cloud corrected: 121 sources, median C_M=1.405, median R_foot=1.736
+Correcting cloud: ['Aquila-injections/260813_cmf2p00_n600_s2032/Aquila.s.sources.ok.cat', 'Aquila-injections/260813_cmf2p00_n600_s2032/Aquila.s.sources.ok.add.cat']  (distance=260.0 pc)
+Cloud corrected: 129 sources, median C_M=1.454, median R_foot=1.725
+Correcting cloud: ['Aquila-injections/260813_cmf2p00_n600_s2032_flat/Aquila.s.sources.ok.cat', 'Aquila-injections/260813_cmf2p00_n600_s2032_flat/Aquila.s.sources.ok.add.cat']  (distance=260.0 pc)
+Cloud corrected: 132 sources, median C_M=1.428, median R_foot=1.729
+Correcting cloud: ['Aquila-injections/260813_cmf2p00_n600_s2032_iso/Aquila.s.sources.ok.cat', 'Aquila-injections/260813_cmf2p00_n600_s2032_iso/Aquila.s.sources.ok.add.cat']  (distance=260.0 pc)
+Cloud corrected: 124 sources, median C_M=1.425, median R_foot=1.729
+Correcting cloud: ['Aquila-injections/260813_cmf2p00_n600_s2032_flat_iso/Aquila.s.sources.ok.cat', 'Aquila-injections/260813_cmf2p00_n600_s2032_flat_iso/Aquila.s.sources.ok.add.cat']  (distance=260.0 pc)
+Cloud corrected: 111 sources, median C_M=1.396, median R_foot=1.736
+Correcting cloud: ['Aquila-injections/260814_cmf2p00_n600_s2033/Aquila.s.sources.ok.cat', 'Aquila-injections/260814_cmf2p00_n600_s2033/Aquila.s.sources.ok.add.cat']  (distance=260.0 pc)
+Cloud corrected: 125 sources, median C_M=1.448, median R_foot=1.734
+Correcting cloud: ['Aquila-injections/260814_cmf2p00_n600_s2033_flat/Aquila.s.sources.ok.cat', 'Aquila-injections/260814_cmf2p00_n600_s2033_flat/Aquila.s.sources.ok.add.cat']  (distance=260.0 pc)
+Cloud corrected: 128 sources, median C_M=1.425, median R_foot=1.772
+Correcting cloud: ['Aquila-injections/260814_cmf2p00_n600_s2033_iso/Aquila.s.sources.ok.cat', 'Aquila-injections/260814_cmf2p00_n600_s2033_iso/Aquila.s.sources.ok.add.cat']  (distance=260.0 pc)
+Cloud corrected: 131 sources, median C_M=1.432, median R_foot=1.720
+Correcting cloud: ['Aquila-injections/260814_cmf2p00_n600_s2033_flat_iso/Aquila.s.sources.ok.cat', 'Aquila-injections/260814_cmf2p00_n600_s2033_flat_iso/Aquila.s.sources.ok.add.cat']  (distance=260.0 pc)
+Cloud corrected: 111 sources, median C_M=1.405, median R_foot=1.742
+
+Injection test: 710 matched sources, 3.4% truly super-critical, so the commoner
+class alone would score 96.6%.
+  median getsf width ratios: 250/SD 1.125, 350/250 1.021, 500/250 1.279
+  four observables                       accuracy  97.7%  found  33.3%  kept 100.0%
+  four plus profile width ratios         accuracy  74.2%  found  75.0%  kept  74.2%

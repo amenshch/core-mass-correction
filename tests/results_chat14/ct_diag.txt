@@ -1,0 +1,33 @@
+Building recovery samples from cats/bes_model_grid_final3_catalog + cats/bes_model_grid_final3_recovery_tables ...
+Recovery samples built: 30022 samples from 1597/1840 nodes, in 14.7s
+model-side C_T = Td_avg/T_SED over 30022 samples: median 0.9989, tenth to ninetieth percentile 0.9045 to 1.0603
+Building correctors (3-axis, 4-axis, and diagnostic grids)...
+Building recovery samples from cats/bes_model_grid_final2_catalog + cats/bes_model_grid_final2_recovery_tables_v2 ...
+Recovery samples built: 7497 samples from 403/473 nodes, in 3.3s
+Correctors built (7497 training samples).
+Correcting cloud: ['Aquila-injections/260811_cmf2p00_n600_s2030/Aquila.s.sources.ok.cat', 'Aquila-injections/260811_cmf2p00_n600_s2030/Aquila.s.sources.ok.add.cat']  (distance=260.0 pc)
+Cloud corrected: 129 sources, median C_M=1.429, median R_foot=1.734
+Correcting cloud: ['Aquila-injections/260812_cmf2p00_n600_s2031/Aquila.s.sources.ok.cat', 'Aquila-injections/260812_cmf2p00_n600_s2031/Aquila.s.sources.ok.add.cat']  (distance=260.0 pc)
+Cloud corrected: 131 sources, median C_M=1.428, median R_foot=1.733
+Correcting cloud: ['Aquila-injections/260813_cmf2p00_n600_s2032/Aquila.s.sources.ok.cat', 'Aquila-injections/260813_cmf2p00_n600_s2032/Aquila.s.sources.ok.add.cat']  (distance=260.0 pc)
+Cloud corrected: 129 sources, median C_M=1.454, median R_foot=1.725
+Correcting cloud: ['Aquila-injections/260814_cmf2p00_n600_s2033/Aquila.s.sources.ok.cat', 'Aquila-injections/260814_cmf2p00_n600_s2033/Aquila.s.sources.ok.add.cat']  (distance=260.0 pc)
+Cloud corrected: 125 sources, median C_M=1.448, median R_foot=1.734
+
+as placed: 195 sources
+  predicted C_T : median 0.9973, tenth to ninetieth 0.9800 to 1.0207
+  required C_T  : median 0.9233, tenth to ninetieth 0.7704 to 1.1069
+  rank correlation of predicted with required: -0.220
+Correcting cloud: ['Aquila-injections/260811_cmf2p00_n600_s2030_flat/Aquila.s.sources.ok.cat', 'Aquila-injections/260811_cmf2p00_n600_s2030_flat/Aquila.s.sources.ok.add.cat']  (distance=260.0 pc)
+Cloud corrected: 127 sources, median C_M=1.429, median R_foot=1.722
+Correcting cloud: ['Aquila-injections/260812_cmf2p00_n600_s2031_flat/Aquila.s.sources.ok.cat', 'Aquila-injections/260812_cmf2p00_n600_s2031_flat/Aquila.s.sources.ok.add.cat']  (distance=260.0 pc)
+Cloud corrected: 131 sources, median C_M=1.425, median R_foot=1.738
+Correcting cloud: ['Aquila-injections/260813_cmf2p00_n600_s2032_flat/Aquila.s.sources.ok.cat', 'Aquila-injections/260813_cmf2p00_n600_s2032_flat/Aquila.s.sources.ok.add.cat']  (distance=260.0 pc)
+Cloud corrected: 132 sources, median C_M=1.428, median R_foot=1.729
+Correcting cloud: ['Aquila-injections/260814_cmf2p00_n600_s2033_flat/Aquila.s.sources.ok.cat', 'Aquila-injections/260814_cmf2p00_n600_s2033_flat/Aquila.s.sources.ok.add.cat']  (distance=260.0 pc)
+Cloud corrected: 128 sources, median C_M=1.425, median R_foot=1.772
+
+flattened: 230 sources
+  predicted C_T : median 0.9952, tenth to ninetieth 0.9779 to 1.0079
+  required C_T  : median 0.9757, tenth to ninetieth 0.8523 to 1.1223
+  rank correlation of predicted with required: +0.008

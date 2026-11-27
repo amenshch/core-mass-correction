@@ -1,0 +1,12 @@
+Building recovery samples from cats/bes_model_grid_final3_catalog + cats/bes_model_grid_final3_recovery_tables ...
+Recovery samples built: 30022 samples from 1597/1840 nodes, in 14.8s
+samples = 30022, nodes = 1597
+
+parameter           n  typical error   scatter  within 1.5x  class accuracy
+  stability classification with respect to xi_max = 6.451:
+    truly super-critical 40.2% of samples, so a classifier that always answered
+    with the commoner class would score 59.8%
+    truly super-critical   n= 12062, called super-critical 87.2% of the time
+    truly sub-critical     n= 17960, called super-critical 8.9% of the time
+xi_max          30022         0.177      1.92         50%           89.5%
+M_BE            30022         0.114      1.79         63%                

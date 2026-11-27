@@ -1,0 +1,199 @@
+=== Identical in both (by content):
+  aa_plotstyle.py
+  add_recoverable_mass_multiband.py
+  analyse_aquila_sim.py
+  analyse_injection_v3.py
+  analyse_quad_injection.py
+  build_joint_target_v3.py
+  calibrate_floors.py
+  check_injection_match_v3.py
+  check_separation.py
+  cmf_mle.py
+  compare_size_measures.py
+  dkbluered.py
+  dryrun_placement_v3.py
+  estimator_compare.py
+  fig_sim_vs_real.py
+  fit_mass.py
+  flag_hole_models.py
+  getsf_bg.py
+  getsf_columns.py
+  grid_extension.py
+  inject_config_v3_flat_iso.py
+  inject_config_v3_flat.py
+  inject_config_v3_iso.py
+  inject_config_v3.py
+  inject.py
+  loo_4axis_full_v2.py
+  make_bes_grid3_subdivision.py
+  make_compare_pseudoreplication.py
+  make_fig_capping_tradeoff.py
+  make_fig_degeneracy.py
+  make_fig_factor_decomposition.py
+  make_fig_footprint_model.py
+  make_fig_grid_coverage3.py
+  make_fig_validation.py
+  make_flowchart_mpl.py
+  paired_injection_v3.py
+  read_getsf_sed.py
+  run_clouds.py
+  run_inject_v3.py
+  run_validation.py
+  smoke_test_v3.py
+  sweep_sed_bands.py
+  tabulate_recovery.py
+
+=== Same name, DIFFERENT content (check which is newer):
+  laptop 2026-08-07  /Users/amenshch/Astronomy/+CLAUDE_PROJECTS/CORE_MASSES/+Python/+FIGS/+old/make_flowchart_mpl.py
+  repo            figures/make_flowchart_mpl.py
+  laptop 2026-11-25  /Users/amenshch/Astronomy/+CLAUDE_PROJECTS/CORE_MASSES/+Python/+HIRES/hicorrect.py
+  repo            hicorrect/hicorrect.py
+  laptop 2026-08-20  /Users/amenshch/Astronomy/+CLAUDE_PROJECTS/CORE_MASSES/+Python/+GRID/make_bes_grid3.py
+  repo            grid/make_bes_grid3.py
+  laptop 2026-08-20  /Users/amenshch/Astronomy/+CLAUDE_PROJECTS/CORE_MASSES/+Python/+METHOD/mass_correction_pipeline_6.py
+  repo            method/mass_correction_pipeline_6.py
+
+=== Only on the laptop, modified since 2026-07-01:
+  2026-07-01  /Users/amenshch/Astronomy/+CLAUDE_PROJECTS/CORE_MASSES/+Python/gauss_match_fft.py
+  2026-07-01  /Users/amenshch/Astronomy/+CLAUDE_PROJECTS/CORE_MASSES/+Python/inject_config_i1j2k4.py
+  2026-07-01  /Users/amenshch/Astronomy/+CLAUDE_PROJECTS/CORE_MASSES/+Python/inject_config_set3.py
+  2026-07-01  /Users/amenshch/Astronomy/+CLAUDE_PROJECTS/CORE_MASSES/+Python/make_stamps_v2.py
+  2026-07-02  /Users/amenshch/Astronomy/+CLAUDE_PROJECTS/CORE_MASSES/+Python/inject_config_all24.py
+  2026-07-03  /Users/amenshch/Astronomy/+CLAUDE_PROJECTS/CORE_MASSES/+Python/analyze_recovery_.py
+  2026-07-03  /Users/amenshch/Astronomy/+CLAUDE_PROJECTS/CORE_MASSES/+Python/analyze_recovery.py
+  2026-07-05  /Users/amenshch/Astronomy/+CLAUDE_PROJECTS/CORE_MASSES/+Python/+inject_config.py
+  2026-07-05  /Users/amenshch/Astronomy/+CLAUDE_PROJECTS/CORE_MASSES/+Python/+METHOD/+old/getsf_bg_.py
+  2026-07-06  /Users/amenshch/Astronomy/+CLAUDE_PROJECTS/CORE_MASSES/+Python/inject_.py
+  2026-07-07  /Users/amenshch/Astronomy/+CLAUDE_PROJECTS/CORE_MASSES/+Python/+INJECT/+old/run_inject.py
+  2026-07-07  /Users/amenshch/Astronomy/+CLAUDE_PROJECTS/CORE_MASSES/+Python/analyze_and_plot.py
+  2026-07-23  /Users/amenshch/Astronomy/+CLAUDE_PROJECTS/CORE_MASSES/+Python/+GRID/+old/add_recoverable_mass.py
+  2026-07-23  /Users/amenshch/Astronomy/+CLAUDE_PROJECTS/CORE_MASSES/+Python/crop_image.py
+  2026-07-23  /Users/amenshch/Astronomy/+CLAUDE_PROJECTS/CORE_MASSES/+Python/getsf_catalog.py
+  2026-07-25  /Users/amenshch/Astronomy/+CLAUDE_PROJECTS/CORE_MASSES/+Python/+MISC/reload_project.sh
+  2026-07-25  /Users/amenshch/Astronomy/+CLAUDE_PROJECTS/CORE_MASSES/+Python/repro_loo.py
+  2026-07-25  /Users/amenshch/Astronomy/+CLAUDE_PROJECTS/CORE_MASSES/+Python/repro_table1.py
+  2026-07-27  /Users/amenshch/Astronomy/+CLAUDE_PROJECTS/CORE_MASSES/+Python/+INJECT/+old/run_inject_bgscan_.py
+  2026-07-27  /Users/amenshch/Astronomy/+CLAUDE_PROJECTS/CORE_MASSES/+Python/inject_config_bgscan.py
+  2026-07-27  /Users/amenshch/Astronomy/+CLAUDE_PROJECTS/CORE_MASSES/+Python/inject_config_field.py
+  2026-07-27  /Users/amenshch/Astronomy/+CLAUDE_PROJECTS/CORE_MASSES/+Python/run_inject_bgscan.py
+  2026-07-28  /Users/amenshch/Astronomy/+CLAUDE_PROJECTS/CORE_MASSES/+Python/match_injections_.py
+  2026-07-28  /Users/amenshch/Astronomy/+CLAUDE_PROJECTS/CORE_MASSES/+Python/match_injections.py
+  2026-08-02  /Users/amenshch/Astronomy/+CLAUDE_PROJECTS/CORE_MASSES/+Python/+GRID/+old/make_bes_grid.py
+  2026-08-02  /Users/amenshch/Astronomy/+CLAUDE_PROJECTS/CORE_MASSES/+Python/+METHOD/+old/mass_correction_pipeline.py
+  2026-08-02  /Users/amenshch/Astronomy/+CLAUDE_PROJECTS/CORE_MASSES/+Python/loo_4axis_full.py
+  2026-08-05  /Users/amenshch/Astronomy/+CLAUDE_PROJECTS/CORE_MASSES/+Python/+TESTS/+old/run_validation_tests.py
+  2026-08-06  /Users/amenshch/Astronomy/+CLAUDE_PROJECTS/CORE_MASSES/+Python/+METHOD/+old/mass_correction_pipeline_4d.py
+  2026-08-06  /Users/amenshch/Astronomy/+CLAUDE_PROJECTS/CORE_MASSES/+Python/patch_band_R.py
+  2026-08-07  /Users/amenshch/Astronomy/+CLAUDE_PROJECTS/CORE_MASSES/+Python/+METHOD/+old/mass_correction_pipeline_5.py
+  2026-08-07  /Users/amenshch/Astronomy/+CLAUDE_PROJECTS/CORE_MASSES/+Python/inject_config.py
+  2026-08-08  /Users/amenshch/Astronomy/+CLAUDE_PROJECTS/CORE_MASSES/+Python/+FIGS/make_fig_grid_coverage.py
+  2026-08-09  /Users/amenshch/Astronomy/+CLAUDE_PROJECTS/CORE_MASSES/+Python/+INJECT/+old/run_inject_v2.py
+  2026-08-09  /Users/amenshch/Astronomy/+CLAUDE_PROJECTS/CORE_MASSES/+Python/+MISC/patch_band_R.py
+  2026-08-09  /Users/amenshch/Astronomy/+CLAUDE_PROJECTS/CORE_MASSES/+Python/+MISC/patch_estimator.py
+  2026-08-09  /Users/amenshch/Astronomy/+CLAUDE_PROJECTS/CORE_MASSES/+Python/+MISC/patch_run_inject_v2.py
+  2026-08-09  /Users/amenshch/Astronomy/+CLAUDE_PROJECTS/CORE_MASSES/+Python/+MISC/patch_sed_signm.py
+  2026-08-09  /Users/amenshch/Astronomy/+CLAUDE_PROJECTS/CORE_MASSES/+Python/+MISC/patch_tabulate_profiles.py
+  2026-08-09  /Users/amenshch/Astronomy/+CLAUDE_PROJECTS/CORE_MASSES/+Python/check_injection_match.py
+  2026-08-19  /Users/amenshch/Astronomy/+CLAUDE_PROJECTS/CORE_MASSES/+Python/+HIRES/+MISC/hires_calibration.py
+  2026-08-20  /Users/amenshch/Astronomy/+CLAUDE_PROJECTS/CORE_MASSES/+Python/+HIRES/+MISC/apply_hires_correction.py
+  2026-08-20  /Users/amenshch/Astronomy/+CLAUDE_PROJECTS/CORE_MASSES/+Python/+HIRES/+MISC/make_hires_pixel_table.py
+  2026-08-21  /Users/amenshch/Astronomy/+CLAUDE_PROJECTS/CORE_MASSES/+Python/+HIRES/+MISC/fit_hires_residual.py
+  2026-08-21  /Users/amenshch/Astronomy/+CLAUDE_PROJECTS/CORE_MASSES/+Python/+HIRES/+MISC/hires_perscale.py
+  2026-08-21  /Users/amenshch/Astronomy/+CLAUDE_PROJECTS/CORE_MASSES/+Python/+HIRES/+MISC/run_error_budget.py
+  2026-08-21  /Users/amenshch/Astronomy/+CLAUDE_PROJECTS/CORE_MASSES/+Python/+HIRES/+MISC/run_grid_scan.py
+  2026-08-21  /Users/amenshch/Astronomy/+CLAUDE_PROJECTS/CORE_MASSES/+Python/+HIRES/+MISC/temperature_estimators.py
+  2026-08-21  /Users/amenshch/Astronomy/+CLAUDE_PROJECTS/CORE_MASSES/+Python/+HIRES/hires_algorithm.py
+  2026-08-21  /Users/amenshch/Astronomy/+CLAUDE_PROJECTS/CORE_MASSES/+Python/+HIRES/hires_forward.py
+  2026-08-21  /Users/amenshch/Astronomy/+CLAUDE_PROJECTS/CORE_MASSES/+Python/+METHOD/measure_injections.py
+  2026-08-21  /Users/amenshch/Astronomy/+CLAUDE_PROJECTS/CORE_MASSES/+Python/+MISC/collect_profiles.py
+  2026-08-22  /Users/amenshch/Astronomy/+CLAUDE_PROJECTS/CORE_MASSES/+Python/+HIRES/+MISC/hires_apply.py
+  2026-08-24  /Users/amenshch/Astronomy/+CLAUDE_PROJECTS/CORE_MASSES/+Python/+HIRES/+MISC/validate_correction_models.py
+  2026-08-27  /Users/amenshch/Astronomy/+CLAUDE_PROJECTS/CORE_MASSES/+Python/+HIRES/+MISC/guided_correct.py
+  2026-08-27  /Users/amenshch/Astronomy/+CLAUDE_PROJECTS/CORE_MASSES/+Python/+HIRES/+MISC/hires_correct_levels.py
+  2026-08-27  /Users/amenshch/Astronomy/+CLAUDE_PROJECTS/CORE_MASSES/+Python/+HIRES/make_simsky2.py
+  2026-08-28  /Users/amenshch/Astronomy/+CLAUDE_PROJECTS/CORE_MASSES/+Python/+HIRES/+MISC/joint_fit.py
+  2026-08-28  /Users/amenshch/Astronomy/+CLAUDE_PROJECTS/CORE_MASSES/+Python/+HIRES/+MISC/strat_correct.py
+  2026-08-30  /Users/amenshch/Astronomy/+CLAUDE_PROJECTS/CORE_MASSES/+Python/+HIRES/+MISC/make_figures.py
+  2026-08-30  /Users/amenshch/Astronomy/+CLAUDE_PROJECTS/CORE_MASSES/+Python/+HIRES/+MISC/make_letter_figures.py
+  2026-09-03  /Users/amenshch/Astronomy/+CLAUDE_PROJECTS/CORE_MASSES/+Python/+HIRES/+MISC/hires_correct_levels_v2.py
+  2026-09-05  /Users/amenshch/Astronomy/+CLAUDE_PROJECTS/CORE_MASSES/+Python/+HIRES/+MISC/radial_profiles.py
+  2026-09-05  /Users/amenshch/Astronomy/+CLAUDE_PROJECTS/CORE_MASSES/+Python/+HIRES/radial_profiles.py
+  2026-09-08  /Users/amenshch/Astronomy/+CLAUDE_PROJECTS/CORE_MASSES/+Python/+HIRES/make_simsky3.py
+  2026-09-09  /Users/amenshch/Astronomy/+CLAUDE_PROJECTS/CORE_MASSES/+Python/+HIRES/+MISC/harvest_calibration.py
+  2026-09-15  /Users/amenshch/Astronomy/+CLAUDE_PROJECTS/CORE_MASSES/+Python/+HIRES/harvest_grid_.py
+  2026-09-16  /Users/amenshch/Astronomy/+CLAUDE_PROJECTS/CORE_MASSES/+Python/+HIRES/make_simsky4.py
+  2026-09-16  /Users/amenshch/Astronomy/+CLAUDE_PROJECTS/CORE_MASSES/+Python/+HIRES/make_simsky5.py
+  2026-09-22  /Users/amenshch/Astronomy/+CLAUDE_PROJECTS/CORE_MASSES/+Python/+FIGS/superposition_test.py
+  2026-10-06  /Users/amenshch/Astronomy/+CLAUDE_PROJECTS/CORE_MASSES/+Python/+HIRES/cirrus_enhance.py
+  2026-10-06  /Users/amenshch/Astronomy/+CLAUDE_PROJECTS/CORE_MASSES/+Python/+HIRES/cylinder_smooth_temperature.py
+  2026-10-06  /Users/amenshch/Astronomy/+CLAUDE_PROJECTS/CORE_MASSES/+Python/+HIRES/inject_cores_simsky.py
+  2026-10-06  /Users/amenshch/Astronomy/+CLAUDE_PROJECTS/CORE_MASSES/+Python/+HIRES/make_cirrus3d.py
+  2026-10-06  /Users/amenshch/Astronomy/+CLAUDE_PROJECTS/CORE_MASSES/+Python/+HIRES/make_simsky6__.py
+  2026-10-08  /Users/amenshch/Astronomy/+CLAUDE_PROJECTS/CORE_MASSES/+Python/+HIRES/extract_cube_slice.py
+  2026-10-11  /Users/amenshch/Astronomy/+CLAUDE_PROJECTS/CORE_MASSES/+Python/mute_commercials_.py
+  2026-10-12  /Users/amenshch/Astronomy/+CLAUDE_PROJECTS/CORE_MASSES/+Python/mute copy.py
+  2026-10-12  /Users/amenshch/Astronomy/+CLAUDE_PROJECTS/CORE_MASSES/+Python/mute__.py
+  2026-10-12  /Users/amenshch/Astronomy/+CLAUDE_PROJECTS/CORE_MASSES/+Python/mute_.py
+  2026-10-13  /Users/amenshch/Astronomy/+CLAUDE_PROJECTS/CORE_MASSES/+Python/+HIRES/g0_requirement_.py
+  2026-10-13  /Users/amenshch/Astronomy/+CLAUDE_PROJECTS/CORE_MASSES/+Python/+HIRES/g0_requirement.py
+  2026-10-13  /Users/amenshch/Astronomy/+CLAUDE_PROJECTS/CORE_MASSES/+Python/mute copy 2.py
+  2026-10-13  /Users/amenshch/Astronomy/+CLAUDE_PROJECTS/CORE_MASSES/+Python/mute copy 3.py
+  2026-10-13  /Users/amenshch/Astronomy/+CLAUDE_PROJECTS/CORE_MASSES/+Python/mute copy 4.py
+  2026-10-14  /Users/amenshch/Astronomy/+CLAUDE_PROJECTS/CORE_MASSES/+Python/mute.py
+  2026-10-19  /Users/amenshch/Astronomy/+CLAUDE_PROJECTS/CORE_MASSES/+Python/+HIRES/fit_attenuation_law_.py
+  2026-10-20  /Users/amenshch/Astronomy/+CLAUDE_PROJECTS/CORE_MASSES/+Python/+HIRES/diagnose_shielding_branches.py
+  2026-10-20  /Users/amenshch/Astronomy/+CLAUDE_PROJECTS/CORE_MASSES/+Python/+HIRES/fit_attenuation_law__.py
+  2026-10-21  /Users/amenshch/Astronomy/+CLAUDE_PROJECTS/CORE_MASSES/+Python/+HIRES/paper_numbers/diagnose_shielding_branches.py
+  2026-10-26  /Users/amenshch/Astronomy/+CLAUDE_PROJECTS/CORE_MASSES/+Python/+HIRES/fit_attenuation_law.py
+  2026-10-27  /Users/amenshch/Astronomy/+CLAUDE_PROJECTS/CORE_MASSES/+Python/+HIRES/paper_numbers/refit.py
+  2026-10-30  /Users/amenshch/Astronomy/+CLAUDE_PROJECTS/CORE_MASSES/+Python/+HIRES/validate_resolutions.py
+  2026-11-02  /Users/amenshch/Astronomy/+CLAUDE_PROJECTS/CORE_MASSES/+Python/+HIRES/footprint_fraction.py
+  2026-11-21  /Users/amenshch/Astronomy/+CLAUDE_PROJECTS/CORE_MASSES/+Python/harvest_lanes.py
+  2026-11-22  /Users/amenshch/Astronomy/+CLAUDE_PROJECTS/CORE_MASSES/+Python/plot_lanes.py
+  2026-11-25  /Users/amenshch/Astronomy/+CLAUDE_PROJECTS/CORE_MASSES/+Python/+HIRES/calib2d.py
+  2026-11-25  /Users/amenshch/Astronomy/+CLAUDE_PROJECTS/CORE_MASSES/+Python/+HIRES/calib3d.py
+  2026-11-25  /Users/amenshch/Astronomy/+CLAUDE_PROJECTS/CORE_MASSES/+Python/+HIRES/cloud_emission.py
+  2026-11-25  /Users/amenshch/Astronomy/+CLAUDE_PROJECTS/CORE_MASSES/+Python/+HIRES/cloud_tables.py
+  2026-11-25  /Users/amenshch/Astronomy/+CLAUDE_PROJECTS/CORE_MASSES/+Python/+HIRES/compare_cirrus3d.py
+  2026-11-25  /Users/amenshch/Astronomy/+CLAUDE_PROJECTS/CORE_MASSES/+Python/+HIRES/field_factor_errors.py
+  2026-11-25  /Users/amenshch/Astronomy/+CLAUDE_PROJECTS/CORE_MASSES/+Python/+HIRES/harvest_calib3.py
+  2026-11-25  /Users/amenshch/Astronomy/+CLAUDE_PROJECTS/CORE_MASSES/+Python/+HIRES/harvest_grid.py
+  2026-11-25  /Users/amenshch/Astronomy/+CLAUDE_PROJECTS/CORE_MASSES/+Python/+HIRES/hicorrect3.py
+  2026-11-25  /Users/amenshch/Astronomy/+CLAUDE_PROJECTS/CORE_MASSES/+Python/+HIRES/make_cds_tables.py
+  2026-11-25  /Users/amenshch/Astronomy/+CLAUDE_PROJECTS/CORE_MASSES/+Python/+HIRES/make_field_factor_.py
+  2026-11-25  /Users/amenshch/Astronomy/+CLAUDE_PROJECTS/CORE_MASSES/+Python/+HIRES/make_field_factor.py
+  2026-11-25  /Users/amenshch/Astronomy/+CLAUDE_PROJECTS/CORE_MASSES/+Python/+HIRES/make_g0_table.py
+  2026-11-25  /Users/amenshch/Astronomy/+CLAUDE_PROJECTS/CORE_MASSES/+Python/+HIRES/make_simsky6.py
+  2026-11-25  /Users/amenshch/Astronomy/+CLAUDE_PROJECTS/CORE_MASSES/+Python/+HIRES/paper_numbers/analytic_g.py
+  2026-11-25  /Users/amenshch/Astronomy/+CLAUDE_PROJECTS/CORE_MASSES/+Python/+HIRES/paper_numbers/aquila_numbers.py
+  2026-11-25  /Users/amenshch/Astronomy/+CLAUDE_PROJECTS/CORE_MASSES/+Python/+HIRES/paper_numbers/cylinder_table.py
+  2026-11-25  /Users/amenshch/Astronomy/+CLAUDE_PROJECTS/CORE_MASSES/+Python/+HIRES/paper_numbers/field_factor_errors.py
+  2026-11-25  /Users/amenshch/Astronomy/+CLAUDE_PROJECTS/CORE_MASSES/+Python/+HIRES/paper_numbers/inclination_errors.py
+  2026-11-25  /Users/amenshch/Astronomy/+CLAUDE_PROJECTS/CORE_MASSES/+Python/+HIRES/paper_numbers/law_checks.py
+  2026-11-25  /Users/amenshch/Astronomy/+CLAUDE_PROJECTS/CORE_MASSES/+Python/+HIRES/paper_numbers/scale_test.py
+  2026-11-25  /Users/amenshch/Astronomy/+CLAUDE_PROJECTS/CORE_MASSES/+Python/+HIRES/paper_numbers/simsky_numbers.py
+  2026-11-25  /Users/amenshch/Astronomy/+CLAUDE_PROJECTS/CORE_MASSES/+Python/+HIRES/paper_numbers/superposition_numbers.py
+  2026-11-25  /Users/amenshch/Astronomy/+CLAUDE_PROJECTS/CORE_MASSES/+Python/+HIRES/superposition_test.py
+  2026-11-25  /Users/amenshch/Astronomy/+CLAUDE_PROJECTS/CORE_MASSES/+Python/+HIRES/validate_calib3.py
+
+=== Same file name in several laptop places (possible duplicate versions):
+  2026-08-08  /Users/amenshch/Astronomy/+CLAUDE_PROJECTS/CORE_MASSES/+Python/+FIGS/aa_plotstyle.py
+  2026-08-08  /Users/amenshch/Astronomy/+CLAUDE_PROJECTS/CORE_MASSES/+Python/+HIRES/+MISC/aa_plotstyle.py
+  2026-08-14  /Users/amenshch/Astronomy/+CLAUDE_PROJECTS/CORE_MASSES/+Python/+TESTS/analyse_aquila_sim.py
+  2026-08-11  /Users/amenshch/Astronomy/+CLAUDE_PROJECTS/CORE_MASSES/+Python/+INJECT/analyse_aquila_sim.py
+  2026-10-20  /Users/amenshch/Astronomy/+CLAUDE_PROJECTS/CORE_MASSES/+Python/+HIRES/diagnose_shielding_branches.py
+  2026-10-21  /Users/amenshch/Astronomy/+CLAUDE_PROJECTS/CORE_MASSES/+Python/+HIRES/paper_numbers/diagnose_shielding_branches.py
+  2026-08-14  /Users/amenshch/Astronomy/+CLAUDE_PROJECTS/CORE_MASSES/+Python/+INJECT/dryrun_placement_v3.py
+  2026-08-11  /Users/amenshch/Astronomy/+CLAUDE_PROJECTS/CORE_MASSES/+Python/dryrun_placement_v3.py
+  2026-11-25  /Users/amenshch/Astronomy/+CLAUDE_PROJECTS/CORE_MASSES/+Python/+HIRES/paper_numbers/field_factor_errors.py
+  2026-11-25  /Users/amenshch/Astronomy/+CLAUDE_PROJECTS/CORE_MASSES/+Python/+HIRES/field_factor_errors.py
+  2026-08-02  /Users/amenshch/Astronomy/+CLAUDE_PROJECTS/CORE_MASSES/+Python/+FIGS/make_flowchart_mpl.py
+  2026-08-07  /Users/amenshch/Astronomy/+CLAUDE_PROJECTS/CORE_MASSES/+Python/+FIGS/+old/make_flowchart_mpl.py
+  2026-08-06  /Users/amenshch/Astronomy/+CLAUDE_PROJECTS/CORE_MASSES/+Python/patch_band_R.py
+  2026-08-09  /Users/amenshch/Astronomy/+CLAUDE_PROJECTS/CORE_MASSES/+Python/+MISC/patch_band_R.py
+  2026-09-05  /Users/amenshch/Astronomy/+CLAUDE_PROJECTS/CORE_MASSES/+Python/+HIRES/+MISC/radial_profiles.py
+  2026-09-05  /Users/amenshch/Astronomy/+CLAUDE_PROJECTS/CORE_MASSES/+Python/+HIRES/radial_profiles.py
+  2026-08-04  /Users/amenshch/Astronomy/+CLAUDE_PROJECTS/CORE_MASSES/+Python/run_clouds.py
+  2026-08-04  /Users/amenshch/Astronomy/+CLAUDE_PROJECTS/CORE_MASSES/+Python/+TESTS/run_clouds.py
+  2026-09-22  /Users/amenshch/Astronomy/+CLAUDE_PROJECTS/CORE_MASSES/+Python/+FIGS/superposition_test.py
+  2026-11-25  /Users/amenshch/Astronomy/+CLAUDE_PROJECTS/CORE_MASSES/+Python/+HIRES/superposition_test.py

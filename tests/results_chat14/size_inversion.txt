@@ -1,0 +1,10 @@
+Building recovery samples from cats/bes_model_grid_final3_catalog + cats/bes_model_grid_final3_recovery_tables ...
+Recovery samples built: 30022 samples from 1597/1840 nodes, in 15.5s
+30022 samples on 1597 nodes
+
+Ratio of each estimate of the truncation radius to its true value:
+
+  half the Gaussian-deconvolved width          n=30018  median  0.329  scatter  2.04  within 1.5x   7%  typical error  0.483 dex
+  half the measured width                      n=30022  median  0.440  scatter  2.07  within 1.5x  27%  typical error  0.356 dex
+  the footprint radius                         n=30022  median  0.736  scatter  2.08  within 1.5x  37%  typical error  0.238 dex
+  grid inversion, node withheld                n=30022  median  1.013  scatter  1.63  within 1.5x  65%  typical error  0.116 dex

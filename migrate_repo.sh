@@ -161,6 +161,6 @@ echo "Copied $N files or folders into $NEW"
 git add -A
 git commit --quiet -m "Files migrated from Aquila-cutout-test (see MIGRATION.md)" && echo "Committed."
 if [ "$PUSH" = yes ]; then
-  git push --quiet && echo "Pushed to GitHub."
+  git push --quiet -u origin HEAD && echo "Pushed to GitHub."
 fi
 rm -rf "$TMP"

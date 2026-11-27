@@ -68,7 +68,7 @@
 ! the fields at the 16th and 84th percentiles if it was estimated (HIG0P16, HIG0P84), the wavebands fitted (HIBANDS) with their
 ! relative calibration uncertainties (HIERRS), and the four constants of the temperature relation (HITMIN, HIT0, HISSTAR, HIGAMMA).
 !
-! Usage:  hicorrect <dimage> [<timage>] [-bands=<waves>] [-errors=<relerrs>] [-g0=<field>] [-verb{0|1|2}]
+! Usage:  hicorrect <dimage> [<timage>] [-bands=<waves>] [-errors=<relerrs>] [-g0=<field>] [-verb{0|1|2|3}]
 !
 !         <dimage>     the surface density image to be corrected; the factor is evaluated on it and it is multiplied by it
 !                      (the file names of <dimage> and <timage> may be given without the extension '.fits', which is then added)
@@ -164,7 +164,8 @@
        equivalence ( cnan, rnan )
        data          cnan / 'NaN' /
 
-       external      planckf, rfits, wfits, interp, putima, invplanck, fieldfac, addkeys, estfield, istemp, lastc
+       external      osystem, ftvers, planckf, rfits, wfits, interp, putima, invplanck, fieldfac, addkeys, estfield, istemp, lastc
+     &             , when, getfitshead
 !__________________________________________________________________________________________________________________________________
 !
 ! The field factor g, which adapts the correction factor to a radiation field other than G_0 = 10 in Habing units, measured on the
@@ -177,73 +178,73 @@
 
        data gfld  / 0.98d0, 2.12d0, 4.61d0, 10.0d0, 21.7d0, 47.1d0, 102.4d0, 222.2d0, 482.5d0 /
 
-       data gtab  /  0.994d0, 0.987d0, 0.979d0, 0.971d0, 0.958d0, 0.942d0, 0.924d0, 0.905d0 ! G_0 = 0.98
-     &             , 0.878d0, 0.845d0, 0.815d0, 0.793d0, 0.785d0, 0.777d0, 0.768d0, 0.763d0
-     &             , 0.762d0, 0.764d0, 0.770d0, 0.769d0, 0.769d0, 0.769d0, 0.769d0, 0.769d0
+       data gtab  / 0.994d0, 0.987d0, 0.979d0, 0.971d0, 0.958d0, 0.942d0, 0.924d0, 0.905d0 ! G_0 = 0.98
+     &            , 0.878d0, 0.845d0, 0.815d0, 0.793d0, 0.785d0, 0.777d0, 0.768d0, 0.763d0
+     &            , 0.762d0, 0.764d0, 0.770d0, 0.769d0, 0.769d0, 0.769d0, 0.769d0, 0.769d0
      
-     &             , 0.995d0, 0.992d0, 0.988d0, 0.981d0, 0.970d0, 0.957d0, 0.943d0, 0.928d0 ! G_0 = 2.12
-     &             , 0.906d0, 0.877d0, 0.850d0, 0.833d0, 0.824d0, 0.817d0, 0.812d0, 0.810d0
-     &             , 0.811d0, 0.810d0, 0.808d0, 0.807d0, 0.807d0, 0.807d0, 0.807d0, 0.807d0
+     &            , 0.995d0, 0.992d0, 0.988d0, 0.981d0, 0.970d0, 0.957d0, 0.943d0, 0.928d0 ! G_0 = 2.12
+     &            , 0.906d0, 0.877d0, 0.850d0, 0.833d0, 0.824d0, 0.817d0, 0.812d0, 0.810d0
+     &            , 0.811d0, 0.810d0, 0.808d0, 0.807d0, 0.807d0, 0.807d0, 0.807d0, 0.807d0
      
-     &             , 0.998d0, 0.995d0, 0.991d0, 0.987d0, 0.981d0, 0.970d0, 0.962d0, 0.955d0 ! G_0 = 4.61
-     &             , 0.943d0, 0.924d0, 0.907d0, 0.899d0, 0.896d0, 0.891d0, 0.888d0, 0.882d0
-     &             , 0.880d0, 0.882d0, 0.889d0, 0.891d0, 0.891d0, 0.891d0, 0.891d0, 0.891d0
+     &            , 0.998d0, 0.995d0, 0.991d0, 0.987d0, 0.981d0, 0.970d0, 0.962d0, 0.955d0 ! G_0 = 4.61
+     &            , 0.943d0, 0.924d0, 0.907d0, 0.899d0, 0.896d0, 0.891d0, 0.888d0, 0.882d0
+     &            , 0.880d0, 0.882d0, 0.889d0, 0.891d0, 0.891d0, 0.891d0, 0.891d0, 0.891d0
      
-     &             , 1.000d0, 1.000d0, 1.000d0, 1.000d0, 1.000d0, 1.000d0, 1.000d0, 1.000d0 ! G_0 = 10
-     &             , 1.000d0, 1.000d0, 1.000d0, 1.000d0, 1.000d0, 1.000d0, 1.000d0, 1.000d0
-     &             , 1.000d0, 1.000d0, 1.000d0, 1.000d0, 1.000d0, 1.000d0, 1.000d0, 1.000d0
+     &            , 1.000d0, 1.000d0, 1.000d0, 1.000d0, 1.000d0, 1.000d0, 1.000d0, 1.000d0 ! G_0 = 10
+     &            , 1.000d0, 1.000d0, 1.000d0, 1.000d0, 1.000d0, 1.000d0, 1.000d0, 1.000d0
+     &            , 1.000d0, 1.000d0, 1.000d0, 1.000d0, 1.000d0, 1.000d0, 1.000d0, 1.000d0
      
-     &             , 1.000d0, 1.000d0, 1.001d0, 1.004d0, 1.009d0, 1.014d0, 1.028d0, 1.051d0 ! G_0 = 21.7
-     &             , 1.082d0, 1.103d0, 1.121d0, 1.134d0, 1.140d0, 1.136d0, 1.126d0, 1.101d0
-     &             , 1.080d0, 1.064d0, 1.075d0, 1.085d0, 1.085d0, 1.085d0, 1.085d0, 1.085d0
+     &            , 1.000d0, 1.000d0, 1.001d0, 1.004d0, 1.009d0, 1.014d0, 1.028d0, 1.051d0 ! G_0 = 21.7
+     &            , 1.082d0, 1.103d0, 1.121d0, 1.134d0, 1.140d0, 1.136d0, 1.126d0, 1.101d0
+     &            , 1.080d0, 1.064d0, 1.075d0, 1.085d0, 1.085d0, 1.085d0, 1.085d0, 1.085d0
      
-     &             , 0.999d0, 0.999d0, 1.000d0, 1.004d0, 1.012d0, 1.022d0, 1.044d0, 1.080d0 ! G_0 = 47.1
-     &             , 1.130d0, 1.175d0, 1.215d0, 1.242d0, 1.240d0, 1.223d0, 1.205d0, 1.181d0
-     &             , 1.161d0, 1.132d0, 1.111d0, 1.098d0, 1.098d0, 1.098d0, 1.098d0, 1.098d0
+     &            , 0.999d0, 0.999d0, 1.000d0, 1.004d0, 1.012d0, 1.022d0, 1.044d0, 1.080d0 ! G_0 = 47.1
+     &            , 1.130d0, 1.175d0, 1.215d0, 1.242d0, 1.240d0, 1.223d0, 1.205d0, 1.181d0
+     &            , 1.161d0, 1.132d0, 1.111d0, 1.098d0, 1.098d0, 1.098d0, 1.098d0, 1.098d0
      
-     &             , 0.996d0, 0.995d0, 0.995d0, 0.996d0, 1.001d0, 1.012d0, 1.035d0, 1.074d0 ! G_0 = 102.4
-     &             , 1.130d0, 1.177d0, 1.209d0, 1.223d0, 1.206d0, 1.177d0, 1.147d0, 1.114d0
-     &             , 1.083d0, 1.050d0, 1.024d0, 1.005d0, 1.005d0, 1.005d0, 1.005d0, 1.005d0
+     &            , 0.996d0, 0.995d0, 0.995d0, 0.996d0, 1.001d0, 1.012d0, 1.035d0, 1.074d0 ! G_0 = 102.4
+     &            , 1.130d0, 1.177d0, 1.209d0, 1.223d0, 1.206d0, 1.177d0, 1.147d0, 1.114d0
+     &            , 1.083d0, 1.050d0, 1.024d0, 1.005d0, 1.005d0, 1.005d0, 1.005d0, 1.005d0
      
-     &             , 0.989d0, 0.989d0, 0.988d0, 0.989d0, 0.991d0, 0.995d0, 1.010d0, 1.040d0 ! G_0 = 222.2
-     &             , 1.082d0, 1.113d0, 1.120d0, 1.110d0, 1.089d0, 1.052d0, 1.018d0, 0.977d0
-     &             , 0.939d0, 0.908d0, 0.884d0, 0.863d0, 0.863d0, 0.863d0, 0.863d0, 0.863d0
+     &            , 0.989d0, 0.989d0, 0.988d0, 0.989d0, 0.991d0, 0.995d0, 1.010d0, 1.040d0 ! G_0 = 222.2
+     &            , 1.082d0, 1.113d0, 1.120d0, 1.110d0, 1.089d0, 1.052d0, 1.018d0, 0.977d0
+     &            , 0.939d0, 0.908d0, 0.884d0, 0.863d0, 0.863d0, 0.863d0, 0.863d0, 0.863d0
      
-     &             , 0.995d0, 0.990d0, 0.986d0, 0.984d0, 0.981d0, 0.978d0, 0.984d0, 0.999d0 ! G_0 = 482.5
-     &             , 1.014d0, 1.015d0, 1.004d0, 0.973d0, 0.943d0, 0.907d0, 0.869d0, 0.835d0
-     &             , 0.798d0, 0.768d0, 0.746d0, 0.723d0, 0.723d0, 0.723d0, 0.723d0, 0.723d0 /
+     &            , 0.995d0, 0.990d0, 0.986d0, 0.984d0, 0.981d0, 0.978d0, 0.984d0, 0.999d0 ! G_0 = 482.5
+     &            , 1.014d0, 1.015d0, 1.004d0, 0.973d0, 0.943d0, 0.907d0, 0.869d0, 0.835d0
+     &            , 0.798d0, 0.768d0, 0.746d0, 0.723d0, 0.723d0, 0.723d0, 0.723d0, 0.723d0 /
 
 ! The median fitted temperature (K) of the models of the grid of radiation fields, for estimating the field of a cloud when -g0= is
 ! not given. Rows are bins of 0.2 dex of the fitted surface density from 10^tx0 cm^-2; columns are the fields gfld; -1 where a bin
 ! has no models. From the images at 13.5 arcsec fitted to 160-500 µm with the standard weights (make_g0_table.py on the tables of
 ! harvest_calib3.py).
 
-       data ttab /   14.900d0, 14.900d0, 13.900d0, 12.500d0, 12.300d0, 11.300d0, 10.500d0, 9.700d0  ! G_0 = 0.98
-     &             , 8.897d0, 8.100d0, 7.900d0
+       data ttab / 14.900d0, 14.900d0, 13.900d0, 12.500d0, 12.300d0, 11.300d0, 10.500d0, 9.700d0  ! G_0 = 0.98
+     &           , 8.897d0, 8.100d0, 7.900d0
      
-     &             , 15.500d0, 15.300d0, 14.100d0, 12.900d0, 11.700d0, 11.500d0, 10.700d0, 9.900d0  ! G_0 = 2.12
-     &             , 9.100d0, 8.300d0, 8.100d0
+     &           , 15.500d0, 15.300d0, 14.100d0, 12.900d0, 11.700d0, 11.500d0, 10.700d0, 9.900d0  ! G_0 = 2.12
+     &           , 9.100d0, 8.300d0, 8.100d0
      
-     &             , 16.300d0, 16.100d0, 14.700d0, 13.300d0, 12.100d0, 11.300d0, 11.100d0, 10.300d0 ! G_0 = 4.61
-     &             , 9.500d0, 8.569d0, 8.500d0
+     &           , 16.300d0, 16.100d0, 14.700d0, 13.300d0, 12.100d0, 11.300d0, 11.100d0, 10.300d0 ! G_0 = 4.61
+     &           , 9.500d0, 8.569d0, 8.500d0
      
-     &             , 17.700d0, 17.300d0, 15.700d0, 14.100d0, 12.900d0, 11.900d0, 11.100d0, 11.100d0 ! G_0 = 10
-     &             , 10.100d0, 9.100d0, -1.0d0
+     &           , 17.700d0, 17.300d0, 15.700d0, 14.100d0, 12.900d0, 11.900d0, 11.100d0, 11.100d0 ! G_0 = 10
+     &           , 10.100d0, 9.100d0, -1.0d0
      
-     &             , 19.300d0, 19.100d0, 17.100d0, 15.300d0, 14.100d0, 13.041d0, 12.100d0, 11.100d0 ! G_0 = 21.7
-     &             , 11.100d0, 10.071d0, -1.0d0
+     &           , 19.300d0, 19.100d0, 17.100d0, 15.300d0, 14.100d0, 13.041d0, 12.100d0, 11.100d0 ! G_0 = 21.7
+     &           , 11.100d0, 10.071d0, -1.0d0
      
-     &             , 21.700d0, 21.300d0, 18.900d0, 16.700d0, 15.300d0, 14.500d0, 13.293d0, 12.100d0 ! G_0 = 47.1
-     &             , 12.100d0, 10.900d0, -1.0d0
+     &           , 21.700d0, 21.300d0, 18.900d0, 16.700d0, 15.300d0, 14.500d0, 13.293d0, 12.100d0 ! G_0 = 47.1
+     &           , 12.100d0, 10.900d0, -1.0d0
      
-     &             , 24.300d0, 23.900d0, 20.900d0, 18.500d0, 16.900d0, 15.900d0, 14.700d0, 14.103d0 ! G_0 = 102.4
-     &             , 13.300d0, 11.900d0, -1.0d0
+     &           , 24.300d0, 23.900d0, 20.900d0, 18.500d0, 16.900d0, 15.900d0, 14.700d0, 14.103d0 ! G_0 = 102.4
+     &           , 13.300d0, 11.900d0, -1.0d0
      
-     &             , 27.500d0, 27.100d0, 23.700d0, 20.500d0, 18.500d0, 17.300d0, 15.900d0, 15.300d0 ! G_0 = 222.2
-     &             , 14.300d0, 13.300d0, 13.015d0
+     &           , 27.500d0, 27.100d0, 23.700d0, 20.500d0, 18.500d0, 17.300d0, 15.900d0, 15.300d0 ! G_0 = 222.2
+     &           , 14.300d0, 13.300d0, 13.015d0
      
-     &             , 33.900d0, 30.700d0, 26.700d0, 22.700d0, 20.300d0, 18.700d0, 17.900d0, 17.300d0 ! G_0 = 482.5
-     &             , 15.513d0, 14.700d0, 14.100d0 /
+     &           , 33.900d0, 30.700d0, 26.700d0, 22.700d0, 20.300d0, 18.700d0, 17.900d0, 17.300d0 ! G_0 = 482.5
+     &           , 15.513d0, 14.700d0, 14.100d0 /
 !__________________________________________________________________________________________________________________________________
 !
 ! The command line. The first positional argument is the surface density image to be corrected, the second one, optional, is the
@@ -301,7 +302,7 @@
 
        if (cverbose .ge. '-verb2') then
          write (iotty,'( )')
-         if (arg1(1:ia1) .eq. ':') write (iotty,'(a,$)') '  '
+!!         if (arg1(1:ia1) .eq. ':') write (iotty,'(a,$)') '  '
          write (iotty,'(a,$)') ' HICORRECT '//dot//' Correct Bias of Surface Density Images '//dot//' '//compda
        endif
        if (arg1(1:ia1) .eq. ':') stop
@@ -437,9 +438,8 @@
 
        if (cverbose .gt. '-verb1') then
          write (iotty,'(/a,i4,a)') '   Computing effective attenuating columns (angular averages over', nang, ' directions)'
-         write (iotty,'(a,1pe10.4,a,e10.4,a,e10.4,a,e10.4,a,0pf7.5,a)')
-     &                             '   Shielding law T(s) = ', tfloor, ' + (', tsurf, ' - ', tfloor, ') * (1 + s / ', sstar
-     &                           , ')**(-', gamma, ') K'
+         write (iotty,'(4(a,1pe11.4),a,0pf7.5,a)') '   Shielding law T(s) = ', tfloor, ' + (', tsurf, ' -', tfloor, ' ) * (1 + s /'
+     &                                           , sstar, ')**(-', gamma, ') K'
        endif
 !__________________________________________________________________________________________________________________________________
 !
@@ -727,10 +727,19 @@
          ddx(i) = 0.5d0 * (fsx + fcx) - fcor(i)
        enddo
  
+! The change d0 at 10^xb0 is interpolated linearly in log10 of the fitted surface density between the two tabulated points that
+! bracket it, as numpy.interp does in hicorrect.py.
+
        d0 = ddx(1)
-       do i=1,ntab
-         if (log10 ( ffit(i) ) .le. xb0) d0 = ddx(i)
+       do i=1,ntab-1
+         xg = log10 ( ffit(i) )
+         zz = log10 ( ffit(i+1) )
+         if (xg .le. xb0 .and. zz .gt. xb0) then
+           d0 = ddx(i) + (ddx(i+1) - ddx(i)) * (xb0 - xg) / (zz - xg)
+           exit
+         endif
        enddo
+       if (log10 ( ffit(ntab) ) .le. xb0) d0 = ddx(ntab)
  
        do i=1,ntab
          xg = log10 ( ffit(i) )
@@ -926,9 +935,9 @@
        endif
 
        if (cverbose .gt. '-verb1') then
-         write (iotty,'(a,1pe8.2,a)') '   Radiation field G_0 = ', g0, ' '//g0src(1:len_trim(g0src))
+         write (iotty,'(a,1pe9.2,a)') '   Radiation field G_0 =', g0, ' '//g0src(1:len_trim(g0src))
          if (g0 .lt. gfld(1) .or. g0 .gt. gfld(ngf)) then
-           write (iotty,'(a,1pe8.2,a)') '   HICORRECT: WARNING: G_0 =', g0, ' is outside the grid;'
+           write (iotty,'(a,1pe9.2,a)') '   HICORRECT: WARNING: G_0 =', g0, ' is outside the grid;'
      &                                //' the field factor g for the nearest G_0 is used'
          endif
          if (g0 .ne. 10.0d0 .and. icset .ne. 1) then
@@ -988,7 +997,7 @@
            enddo
          enddo
          if (cverbose .gt. '-verb1') then
-           write (iotty,'(a,1pe12.6,a,2(1x,0pf6.4))') '   Valid pixels in the image: ', dble ( nvalid )
+           write (iotty,'(a,1pe13.6,a,2(1x,0pf6.4))') '   Valid pixels in the image:', dble ( nvalid )
      &                                              , '  minmax corrections:', funmin, funmax
            write (iotty,'(a,f7.4)') '   Ratio of the corrected to uncorrected sums:', tt/ss
          endif
@@ -1043,10 +1052,10 @@
                write (iotty,'(a,f7.2,a,f7.2,a)') '   HICORRECT: ERROR: the temperature image has the resolution', beamkw
      &                                         , ' arcsec, the surface density image', beamsd, ' arcsec.'
                write (iotty,'(a)') '   They must have the same resolution; no temperature map is written.'
-             endif
 
-             deallocate ( smap, valid, delta, corr, work, iref )
-             stop
+               deallocate ( smap, valid, delta, corr, work, iref )
+               stop
+             endif
            endif
 
            do j=1,ny
@@ -1235,7 +1244,7 @@
        call ftopen ( unit, fname, 1, block, status )
        call ftpkyd ( unit, 'HIG0'   , g0    , 6, 'radiation field of the correction (Habing units)', status )
        call ftpkys ( unit, 'HIG0SRC', g0src ,    'radiation field given, estimated or default', status )
-       if (g0src(1:9) .eq. 'estimated') then
+       if (index ( g0src, 'estimated' ) .gt. 0) then
          call ftpkyd ( unit, 'HIG0P16', g16 , 6, 'estimated field at the 16th percentile of T', status )
          call ftpkyd ( unit, 'HIG0P84', g84 , 6, 'estimated field at the 84th percentile of T', status )
        endif
@@ -1873,7 +1882,7 @@ cc!      bscale = abs ( funmax - bzero ) / 32767.0d0
          enddo
        enddo
 
-       if (cverbose .eq. '-verb2') then
+       if (cverbose .ge. '-verb2') then
          write (iotty,'(/a)') '   fields that the temperatures of the image require, in bins of the fitted surface density:'
          write (iotty,'(a)')  '   log10 Sigma_F       pixels   T (K) at 16, 50, 84%     G_0 at 16, 50, 84%           too warm'
        endif
@@ -1933,8 +1942,8 @@ cc!      bscale = abs ( funmax - bzero ) / 32767.0d0
            dw(nd)   = dble ( npx )
            ndif = ndif + npx
          endif
-         if (cverbose .eq. '-verb2') then
-           write (iotty,'(3x,f5.1,a,f5.1,i11,3x,3f7.1,3x,3(1x,a1,1pg9.3),0pf9.1,2a)') e0, ' --', e1, npx, tp
+         if (cverbose .ge. '-verb2') then
+           write (iotty,'(3x,f5.1,a,f5.1,i11,3x,3f7.1,3x,3(1x,a1,1pg10.3),0pf9.1,2a)') e0, ' --', e1, npx, tp
      &          , ( fg(i), fl(i), i=1,3 ), 100.0d0 * dble ( m ) / dble ( npx ), '%', cnote
          endif
        enddo

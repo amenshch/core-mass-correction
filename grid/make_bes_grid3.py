@@ -202,12 +202,25 @@ _PIX_SAMPLES = list(itertools.product(np.linspace(-PIX_ARCSEC / 2.0,
 
 def peak_excess(rho_c, r0_AU, xi_max):
     """
-    Background-subtracted peak column [cm^-2] after convolution to BEAM and
-    averaging over one PIX_ARCSEC pixel.
+    Peak surface density [cm^-2] of the source above the TRUE (crater)
+    background, after convolution to BEAM and averaging over one PIX_ARCSEC
+    pixel.  This is the "bsl" convention of the model grid catalog.
 
-    The profile is the projected excess of the truncated BE sphere above the
-    constant cloud pedestal; the pedestal cancels in the subtraction, so only
-    the excess is convolved.
+    In the model the BE sphere REPLACES the cloud material inside R_BE, so the
+    true background is the embedding cloud with a spherical cavity of radius
+    R_BE emptied out.  Subtracting that cratered background from the total
+    surface density leaves exactly the projected column of the BE sphere,
+    which is what is computed and convolved here.
+
+    The pedestal does NOT simply cancel: it cancels only outside the sphere.
+    Across the diameter of the sphere the cloud contributes to the level far
+    from the core but not at the core center.  The observational procedure,
+    which interpolates the background across the footprint from its rim and so
+    behaves as if the core were superposed on undisturbed cloud, therefore
+    removes an extra 2 rho_emb (R_BE^2 - b^2)^(1/2) / (mu m_H) at impact
+    parameter b, or a total gas mass (4 pi / 3) R_BE^3 rho_emb.  That is the
+    "bs" convention, and the difference between the two conventions is the
+    bias of the observational background subtraction.
     """
     r0_as = r0_AU / DIST_PC
     r0_cm = r0_AU * xAU

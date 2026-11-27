@@ -118,9 +118,12 @@ SED FITTER (validated against getsf/fitfluxes 'thinbody')
 Model  F_nu = B_nu(T) * kappa(lambda) * M / D^2,  kappa ~ lambda^(-beta), beta=2.
 Fit (T, amplitude) to the getsf total fluxes FXT_BST at 160/250/350/500 um with
 per-band errors sqrt(FXT_ERR^2 + (adderr*F)^2), adderr = (0.2,0.1,0.1,0.1),
-reproducing fitfluxes' per-band selection (snrmin=1): a band enters the fit only
-if FXP_BST, FXP_ERR, FXT_BST, FXT_ERR are all > 0, |SIGNM| > 1,
-FXP_BST/FXP_ERR >= 1, and FXT_BST/FXT_ERR > 1 (two bands minimum).  The mass
+following fitfluxes' per-band selection in form but not in its thresholds: a
+band enters the fit only if FXP_BST, FXP_ERR, FXT_BST and FXT_ERR are all
+positive and both FXP_BST/FXP_ERR and FXT_BST/FXT_ERR exceed SNR_MIN_PEAK and
+SNR_MIN_TOTAL, both set to 1.5; at least MIN_SED_BANDS = 3 bands must be
+admitted for a fit to be attempted.  The per-band detection significance SIGNM
+is deliberately not used; see the comment in sed_fit.  The mass
 scale is one cloud-independent constant OPACITY_K (kappa_0, reference wavelength,
 beta=2, dust-to-gas).  Matches the catalogue DUST^TEMP to <0.1 K and TOTL^MASS to
 <5% for 97-99.8% of 'ok'-quality sources across all seven clouds; N_corr and the
@@ -278,8 +281,16 @@ _LAMs = np.array(SED_WAVES); _ADD = np.array(SED_ADDERR)
 _KAPs = (1.0 / _LAMs) ** SED_BETA
 _Gall = _KAPs[:, None] * _planck(_LAMs, _TG)          # (nband, nT)
 
-SNR_MIN_PEAK = 2.0     # FXP_BST / FXP_ERR, per band, to admit a flux
-SNR_MIN_TOTAL = 2.0    # FXT_BST / FXT_ERR, per band, to admit a flux
+# Per-band admission thresholds for the fit of the spectral energy
+# distribution: a band is admitted only when its peak flux and its total flux
+# each exceed their own uncertainty by this factor.  The value 1.5 is the one
+# selected as optimal on the population-matched injections, where the true mass
+# of every recovered core is known; it is the setting the paper adopts (see the
+# band-selection table there).  Raising it to 2.0 discards usable cores without
+# improving the accuracy of those retained, and lowering it to 1.0 admits bands
+# whose fluxes are too poorly measured to constrain the fit.
+SNR_MIN_PEAK = 1.5     # FXP_BST / FXP_ERR, per band, to admit a flux
+SNR_MIN_TOTAL = 1.5    # FXT_BST / FXT_ERR, per band, to admit a flux
 # Minimum number of bands that must pass those criteria for a spectral energy
 # distribution to be fitted at all.  A modified blackbody has two free
 # parameters, so a two-band fit has no degrees of freedom: it passes exactly
@@ -293,8 +304,9 @@ MIN_SED_BANDS = 3
 def sed_fit(F, E, FP, FPE, S, dist_pc):
     """Vectorised thinbody fit reproducing getsf/fitfluxes.  Per-band arrays
     (n, nband): F,E = FXT_BST/FXT_ERR; FP,FPE = FXP_BST/FXP_ERR; S = SIGNM.
-    A band enters the fit iff (fitfluxes, snrmin=1) FXP,FXP_ERR,FXT,FXT_ERR>0,
-    FXP/FXP_ERR>SNR_MIN_PEAK, FXT/FXT_ERR>SNR_MIN_TOTAL (>=2 bands);
+    A band enters the fit iff FXP,FXP_ERR,FXT,FXT_ERR>0,
+    FXP/FXP_ERR>SNR_MIN_PEAK, FXT/FXT_ERR>SNR_MIN_TOTAL, and at least
+    MIN_SED_BANDS bands are so admitted;
     SIGNM is NOT used.  Returns dict of arrays
     mass [Msun], temp [K], mass_err, temp_err [1-sigma fit errors], chi2, dof
     (=nbands-2), quality ('ok' iff chi2<dof+1, matching fitfluxes to ~99.7%)."""
@@ -393,7 +405,22 @@ def load_catrec(path):
 # for that call alone.
 BANDR_DIAG = dict(converged=0, table_too_short=0, root_below_r=0, no_profile=0)
 
-def build_recovery_samples(cat_path=CAT67, rectab_path=RECTAB):
+def build_recovery_samples(cat_path=None, rectab_path=None):
+    """Build the corrector training samples from a model-grid catalog and its
+    recovery table.
+
+    The two file names default to the module constants CAT67 and RECTAB, but
+    they are resolved here, when the function is called, and not in the
+    signature.  Written as defaults in the signature they would be evaluated
+    once, when this module is imported, so a caller that reassigned CAT67 or
+    RECTAB and then called this function with no arguments -- which is what
+    build_grids() does -- would silently go on using the grid chosen at import
+    time.  Resolving them in the body makes such a reassignment take effect.
+    """
+    if cat_path is None:
+        cat_path = CAT67
+    if rectab_path is None:
+        rectab_path = RECTAB
     vlog(0, "Building recovery samples from %s + %s ..." % (cat_path, rectab_path))
     t0 = time.time()
     cat = load_cat67(cat_path)
@@ -402,6 +429,12 @@ def build_recovery_samples(cat_path=CAT67, rectab_path=RECTAB):
     band_prof = defaultdict(lambda: defaultdict(list))             # (r, I_rim) profile
     band_peak = defaultdict(lambda: defaultdict(float))            # central intensity
     sd_rows = defaultdict(list)
+    # Per-band width of the truncated, rim-subtracted profile, column fwhm_rec,
+    # tabulated against the same truncation radius as every other quantity here.
+    # It is retained so that ratios of the width between bands can be formed,
+    # these being the measurement-consistent counterpart of the per-band sizes an
+    # extractor reports.  Nothing in the existing pipeline reads it.
+    band_fwhm = defaultdict(lambda: defaultdict(lambda: ([], [])))
     n_rectab_lines = 0
     for l in open(rectab_path):
         if l.startswith('#') or not l.strip():
@@ -417,6 +450,12 @@ def build_recovery_samples(cat_path=CAT67, rectab_path=RECTAB):
         if b in ('160', '250', '350', '500'):
             if np.isfinite(frac):
                 band_fr[ijk][b][0].append(r); band_fr[ijk][b][1].append(frac)
+        try:
+            fwr = float(f[11])
+        except (ValueError, IndexError):
+            fwr = np.nan
+        if np.isfinite(fwr) and fwr > 0:
+            band_fwhm[ijk][b][0].append(r); band_fwhm[ijk][b][1].append(fwr)
         if b in ('SD', '160', '250', '350', '500') and np.isfinite(irim):
             band_prof[ijk][b].append((r, irim))    # incl. SD, for the footprint solver
             band_peak[ijk][b] = max(band_peak[ijk][b], peak)
@@ -544,12 +583,23 @@ def build_recovery_samples(cat_path=CAT67, rectab_path=RECTAB):
         BANDR_DIAG['converged'] += 1
         return R
 
+    def _fwhm_at(ijk, b, r):
+        """Width of the truncated, rim-subtracted profile in band b at
+        truncation radius r, interpolated in the recovery table."""
+        rr, ff = band_fwhm[ijk][b]
+        if len(rr) < 2:
+            return np.nan
+        o = np.argsort(rr)
+        return float(np.interp(r, np.asarray(rr)[o], np.asarray(ff)[o],
+                               left=np.nan, right=np.nan))
+
     node, sig, conc, cfoot, mrec, mbe, cm = [], [], [], [], [], [], []
     rbe_pc = []                                   # physical truncation radius (parsecs);
                                                    # the 4th ("4D") corrector axis
     frac = []                                     # SD recovered fraction (for validation)
     f_flux, f_bg = [], []                         # decomposed mass factors
     f160, f250, f350, f500 = [], [], [], []       # per-band recovery, for the refit
+    w_sd, w160, w250, w350, w500 = [], [], [], [], []   # per-band fwhm_rec
     n_nodes_total = len(sd_rows)
     n_nodes_done = 0
     n_drop_notincat = n_drop_badF = n_drop_norbe = 0
@@ -609,6 +659,11 @@ def build_recovery_samples(cat_path=CAT67, rectab_path=RECTAB):
             f250.append(fb[0] if mask[0] else np.nan)
             f350.append(fb[1] if mask[1] else np.nan)
             f500.append(fb[2] if mask[2] else np.nan)
+            w_sd.append(_fwhm_at(ijk, 'SD', r))
+            w160.append(_fwhm_at(ijk, '160', r))
+            w250.append(_fwhm_at(ijk, '250', r))
+            w350.append(_fwhm_at(ijk, '350', r))
+            w500.append(_fwhm_at(ijk, '500', r))
 
     vlog(1, "  filtering summary: kept=%d  dropped: not-in-catalog=%d  bad-flux=%d  "
          "no-R_BE=%d  unresolved(<2 bands)=%d  non-finite=%d  unreliable(<3 "
@@ -623,7 +678,10 @@ def build_recovery_samples(cat_path=CAT67, rectab_path=RECTAB):
                 frac=np.array(frac),
                 f_flux=np.array(f_flux), f_bg=np.array(f_bg),
                 f160=np.array(f160), f250=np.array(f250),
-                f350=np.array(f350), f500=np.array(f500))
+                f350=np.array(f350), f500=np.array(f500),
+                w_sd=np.array(w_sd), w160=np.array(w160),
+                w250=np.array(w250), w350=np.array(w350),
+                w500=np.array(w500))
 
 # ----------------------- local linear corrector estimator -------------------
 GRID_DISTANCE_PC = 260.0   # distance at which every model stamp of the grid was
@@ -1044,7 +1102,7 @@ def load_getsf(path):
         i = idx[nm]
         return np.array([float(r[i]) if _num(r[i]) else np.nan for r in data])
 
-    # surface-density 13.5" band: the band measured in H2 column-density units
+    # surface-density 13.5" band: the band measured in H2 surface-density units
     # (PEAK_BGF in the 1e21-5e22 range, unlike the continuum bands which are in
     # flux units) with the finest resolution.  Identifying by units is robust; the
     # 13.5" beam is only a sanity bound, since the smallest MEASURED source FWHM can

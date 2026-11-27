@@ -1,4 +1,4 @@
-"""hicorrect2.py -- correct the single-temperature bias of surface density
+"""hicorrect.py -- correct the single-temperature bias of surface density
 images.
 
 The correction applies to any surface density image obtained by fitting one
@@ -80,8 +80,8 @@ The steps, with the equations of the paper (Sect. 4):
 
 Usage:
 
-    python3 hicorrect2.py <image> [<temperature image>] [-bands=<list>]
-                          [-errors=<list>] [-g0=<field>] [-verb2]
+    python3 hicorrect.py <image> [<temperature image>] [-bands=<list>]
+                         [-errors=<list>] [-g0=<field>] [-verb{0|1|2|3}]
 
 <image> is the surface density image to be corrected. The file names of the
 images may be given without the extension '.fits', which is then added. The corrected image is
@@ -98,8 +98,9 @@ dust temperature implied by the corrected surface density is then written as
 
 -bands=<list> gives the wavelengths in micron of the wavebands that were fitted
 to make the image, separated by commas, for example -bands=250,350,500; the
-default is 160,250,350,500. The relation is built for these wavebands, and the
-longest of them is the reference waveband.
+default is 160,250,350,500. At least 3 and at most 6 wavebands can be given,
+and the longest of them, the reference waveband, must be longer than 350 um. The
+relation is built for these wavebands.
 
 -errors=<list> gives the relative calibration uncertainties of the same
 wavebands, in the same order, which set their weights in the fit that made the
@@ -112,8 +113,13 @@ um with the default or equal weights, 250-500 um with equal weights, 100-500 and
 standard set is used, and a warning is printed. The field factor of -g0= was
 measured with the standard set only; for other sets it is approximate.
 
-The outputs are written to the current directory, whatever directory the inputs
-come from. Their names are the same as those of the Fortran version.
+The outputs are written to the directory containing the input images, with the
+names of the Fortran version. Pixels outside the coverage (not positive in
+<image>) are undefined (NaN) in all outputs.
+
+-verb{0|1|2|3} sets how much is printed: -verb0 nothing but errors, -verb1 the
+command line, -verb2 (the default) the full report, including the fields of the
+bins of the field estimate, and -verb3 also the tabulated relation.
 
 The relation is calibrated for the radiation field G_0 = 10 in Habing units.
 For a cloud in another field, the factor is multiplied by a function of the
@@ -137,16 +143,17 @@ with a warning: it is approximate anyway, because a single field per cloud is an
 approximation. A warning is also printed if the healthy pixels (surface
 densities of at least 10^19 cm^-2 and positive temperatures) cover less than the
 smallest observed Herschel maps (2000 x 2000 pixels of 3 arcsec): the image is
-then probably a cutout, and the field should be estimated from the full map. With -verb2, the fields of all bins up to 10^23.2 cm^-2 are
-printed; in denser bins they are biased upward by superposition and internal
-heating.
+then probably a cutout, and the field should be estimated from the full map. The fields of all bins up to 10^23.2 cm^-2 are printed;
+in denser bins they are biased upward by superposition and internal heating.
 
 The correction must be applied once. It is not idempotent: applied again to an
 image it has already corrected, it would raise the values a second time. Every
-output carries CREATOR = 'HICORRECT' and the keyword HICORR, and any input that
-carries either of them is refused, including the outputs of the Fortran version.
+output carries CREATOR = 'HICORRECT', and any input that carries it is refused,
+including the outputs of the Fortran version (inputs with the keyword HICORR,
+written by earlier versions of this script, are refused as well).
 The outputs also record the radiation field of the correction (HIG0), how it
-was obtained (HIG0SRC: given, estimated or default), the fields at the 16th and
+was obtained (HIG0SRC: '(from command line)', '(estimated from images)' or
+'(default)'), the fields at the 16th and
 84th percentiles if it was estimated (HIG0P16, HIG0P84), the
 wavebands fitted (HIBANDS) with their relative calibration uncertainties
 (HIERRS), and the four constants of the temperature relation (HITMIN, HIT0,
@@ -157,8 +164,13 @@ Surface densities in H2 cm^-2, intensities in MJy/sr, temperatures in K.
 
 import os
 import sys
+import warnings
 import numpy as np
 from astropy.io import fits
+from astropy.io.fits.verify import VerifyWarning
+
+# CFITSIO truncates a header comment that does not fit on its card without a message, and so does this script
+warnings.simplefilter("ignore", VerifyWarning)
 
 # -------------------------------- temperature against the attenuating column
 # The relation T(Sigma_a) of Eq. (5) of the paper, fitted by fit_attenuation_law.py to 2093 RADMC-3D models: 2086 Bonnor-Ebert
@@ -242,6 +254,24 @@ NTFIT = 3000         # points of the temperature grid of the fit (ntfit of the F
 CAL_ERR = {70.0: 0.20, 100.0: 0.20, 160.0: 0.20, 250.0: 0.10, 350.0: 0.10, 500.0: 0.10}
                      # relative calibration uncertainty of each waveband, which sets its weight in the fit, as in hires
 SMIN, SMAX = 1.0e20, 1.0e24      # range of the tabulated relation, cm^-2
+MAXBANDS = 6         # largest number of wavebands of -bands= and of values of -errors= (mband of the Fortran version)
+VERB = 2             # verbosity: 0 errors only, 1 the command line, 2 the full report, 3 also the tabulated relation
+
+
+def say(text, level=2):
+    """Print a line of the report if the verbosity is at least level."""
+    if VERB >= level:
+        print(text)
+
+
+def error(text):
+    """Print an error, whatever the verbosity."""
+    print("\n   HICORRECT: ERROR: %s\n" % text)
+
+
+def warn(text):
+    """Print a warning at the verbosity of the report."""
+    say("   HICORRECT: WARNING: %s" % text)
 
 # The field factor g, which adapts the correction factor to a radiation field other than G_0 = 10 (Habing units), measured on the
 # grid of radiation fields (harvest_calib3_G0=*.txt.hist.npz). The pixels are binned in the true surface density, 0.05 dex wide,
@@ -279,43 +309,6 @@ GTAB = np.array([
     [0.769, 0.807, 0.891, 1.000, 1.085, 1.098, 1.005, 0.863, 0.723],  # 23.25
 ])
 
-### SUPERSEDED, NOT USED: an earlier version of the field factor (bins of the fitted surface density, smoothed over three bins),
-### replaced by GTAB above (bins of the true surface density). Kept for reference only.
-### The field factor g, which adapts the correction factor to a radiation field other than G_0 = 10 (Habing units), measured on the
-### grid of radiation fields (harvest_calib3_G0=*.txt): the pixel-weighted mean of log f in bins of 0.1 dex of the fitted surface
-### density, smoothed over three bins, minus the same at G_0 = 10 (make_field_factor.py). Above 10^22.6 cm^-2 the grid has too few
-### pixels, and the field factor is held at its value there. Rows are log10 of the fitted surface density, from GX0 in steps of GDX;
-### columns are the fields GFIELD. It is interpolated linearly in log G_0 and held constant outside the table.
-##GFIELD = np.array([0.98, 2.12, 4.61, 10.0, 21.7, 47.1, 102.4, 222.2, 482.5])
-##GX0, GDX = 20.95, 0.1
-##GTAB = np.array([
-##    [0.991, 0.994, 0.999, 1.000, 1.001, 1.000, 0.997, 0.990, 0.994],  # 20.95
-##    [0.986, 0.991, 0.995, 1.000, 1.001, 1.000, 0.997, 0.989, 0.990],  # 21.05
-##    [0.978, 0.988, 0.992, 1.000, 1.001, 1.000, 0.997, 0.989, 0.986],  # 21.15
-##    [0.970, 0.981, 0.987, 1.000, 1.003, 1.001, 0.996, 0.986, 0.982],  # 21.25
-##    [0.960, 0.972, 0.981, 1.000, 1.007, 1.008, 1.001, 0.989, 0.982],  # 21.35
-##    [0.944, 0.958, 0.973, 1.000, 1.013, 1.017, 1.008, 0.991, 0.979],  # 21.45
-##    [0.920, 0.936, 0.959, 1.000, 1.026, 1.041, 1.034, 1.009, 0.985],  # 21.55
-##    [0.904, 0.924, 0.955, 1.000, 1.047, 1.072, 1.068, 1.035, 0.999],  # 21.65
-##    [0.904, 0.929, 0.967, 1.000, 1.124, 1.176, 1.178, 1.132, 1.010],  # 21.75
-##    [0.837, 0.891, 0.936, 1.000, 1.110, 1.182, 1.188, 1.126, 1.027],  # 21.85
-##    [0.815, 0.857, 0.889, 1.000, 1.084, 1.242, 1.248, 1.106, 1.029],  # 21.95
-##    [0.775, 0.803, 0.919, 1.000, 1.102, 1.179, 1.209, 1.092, 0.991],  # 22.05
-##    [0.756, 0.790, 0.909, 1.000, 1.107, 1.169, 1.162, 1.074, 0.936],  # 22.15
-##    [0.753, 0.786, 0.846, 1.000, 1.092, 1.232, 1.126, 1.032, 0.871],  # 22.25
-##    [0.756, 0.793, 0.851, 1.000, 1.099, 1.170, 1.120, 0.996, 0.838],  # 22.35
-##    [0.796, 0.843, 0.899, 1.000, 1.186, 1.220, 1.120, 0.996, 0.865],  # 22.45
-##    [0.767, 0.812, 0.916, 1.000, 1.168, 1.199, 1.114, 0.959, 0.834],  # 22.55
-##    [0.761, 0.822, 0.907, 1.000, 1.135, 1.165, 1.082, 0.933, 0.801],  # 22.65
-##    [0.761, 0.822, 0.907, 1.000, 1.135, 1.165, 1.082, 0.933, 0.801],  # 22.75
-##    [0.761, 0.822, 0.907, 1.000, 1.135, 1.165, 1.082, 0.933, 0.801],  # 22.85
-##    [0.761, 0.822, 0.907, 1.000, 1.135, 1.165, 1.082, 0.933, 0.801],  # 22.95
-##    [0.761, 0.822, 0.907, 1.000, 1.135, 1.165, 1.082, 0.933, 0.801],  # 23.05
-##    [0.761, 0.822, 0.907, 1.000, 1.135, 1.165, 1.082, 0.933, 0.801],  # 23.15
-##    [0.761, 0.822, 0.907, 1.000, 1.135, 1.165, 1.082, 0.933, 0.801],  # 23.25
-##])
-
-
 def field_factor(logs, g0):
     """Field factor g of the correction factor for the field g0, at log10 of the fitted surface density logs (Eq. 9 of the paper).
 
@@ -333,9 +326,9 @@ def field_factor(logs, g0):
 
 
 # The radiation field of a cloud is estimated from the fitted temperatures of its diffuse material. TTAB is the median fitted
-# temperature (K) of the models of the grid in each field GFIELD, in bins of 0.2 dex of the fitted surface density from 10^TX0 cm^-2,
-# from the images at 13.5 arcsec fitted to 160-500 um with the standard weights (make_g0_table.py on the tables of harvest_calib3.py;
-# NaN where a bin has no models).
+# temperature (K) of the models of the grid in each field GFIELD, in bins of 0.2 dex of the fitted surface density from 10^TX0
+# cm^-2, from the images at 13.5 arcsec fitted to 160-500 um with the standard weights (make_g0_table.py on the tables of
+# harvest_calib3.py; NaN where a bin has no models).
 TX0, TDX = 21.0, 0.2
 TXFIELD = 21.8       # upper limit of the diffuse bins from which the field is taken
 TMINPIX = 100        # bins with fewer pixels of the image are skipped
@@ -375,8 +368,8 @@ def estimate_field(sd, temp, verbose=False):
     d16, d50, d84 = [], [], []
     nall, nhot = 0, 0
     if verbose:
-        print(" fields that the temperatures of the image require, in bins of the fitted surface density:")
-        print("   log10 Sigma_F     pixels   T (K) at 16, 50, 84%      G_0 at 16, 50, 84%   too warm")
+        print("\n   fields that the temperatures of the image require, in bins of the fitted surface density:")
+        print("   log10 Sigma_F       pixels   T (K) at 16, 50, 84%     G_0 at 16, 50, 84%           too warm")
 
     def field_of(t, gs, tm):
         if t < tm[0]:
@@ -536,7 +529,7 @@ def build_relation_t(waves):
     x0, x1 = XBLEND
     # Below 10^x0 the full change d is applied. Above, the change is frozen at its value d0 at 10^x0 and tapered to zero at 10^x1
     # by a half cosine w, so that the factor stays continuous and smooth and equals the analytic average above 10^x1.
-    d0 = np.interp(x0, x, d)
+    d0 = np.interp(x0, x, d)                               # the change interpolated at 10^x0
     d = np.where(x > x0, d0, d)
     w = np.where(x <= x0, 1.0, np.where(x >= x1, 0.0, 0.5 * (1.0 + np.cos(np.pi * (x - x0) / (x1 - x0)))))
     return fitted, factor + w * d, tfit
@@ -582,145 +575,206 @@ def invplanck(b, wave_um):
     return H_PLANCK * nu / (K_BOLTZ * np.log1p(pref / np.maximum(b, 1e-300)))
 
 
-def stamp(header, g0, waves, g0src="given", g0range=None):
-    """Record in a header how the image was corrected: the radiation field, the wavebands fitted and the temperature relation."""
-    # the same CREATOR card as the Fortran version writes, which its FITS reader recognizes
-    header["CREATOR"] = ("HICORRECT", "Alexander Menshchikov, DAp IRFU CEA Saclay")
-    header["HICORR"] = (GAMMA, "index of the temperature relation applied")
-    header["HIG0"] = (g0, "radiation field of the correction, Habing units")
+def stamp(header, g0, waves, g0src="(from command line)", g0range=None):
+    """Record in a header how the image was corrected: the radiation field, the wavebands fitted and the temperature relation,
+    with the keywords, values and comments of addkeys of the Fortran version."""
+    # the same CREATOR card as the Fortran version writes, which both versions recognize and refuse as an input
+    header["CREATOR"] = "HICORRECT"
+    if "HICORR" in header:
+        del header["HICORR"]
+    header["HIG0"] = (float("%.6e" % g0), "radiation field of the correction (Habing units)")
     header["HIG0SRC"] = (g0src, "radiation field given, estimated or default")
-    if g0range is not None:
-        header["HIG0P16"] = (round(g0range[0], 3), "estimated field at the 16th percentile of T")
-        header["HIG0P84"] = (round(g0range[1], 3), "estimated field at the 84th percentile of T")
-    header["HIBANDS"] = (",".join("%.0f" % w for w in waves), "wavebands fitted to make the image, um")
-    header["HIERRS"] = (",".join("%g" % CAL_ERR.get(w, 0.20) for w in waves), "relative calibration errors of HIBANDS")
-    header["HITMIN"] = (TFLOOR, "T_min of the temperature relation, K")
-    header["HIT0"] = (TSURF, "T_max of the temperature relation, K")
+    if "estimated" in g0src and g0range is not None:
+        header["HIG0P16"] = (float("%.6e" % g0range[0]), "estimated field at the 16th percentile of T")
+        header["HIG0P84"] = (float("%.6e" % g0range[1]), "estimated field at the 84th percentile of T")
+    header["HIBANDS"] = (",".join("%d" % round(w) for w in waves), "wavebands fitted to make the image (um)")
+    header["HIERRS"] = (",".join("%.3f" % CAL_ERR.get(w, 0.20) for w in waves), "relative calibration errors of HIBANDS")
+    header["HITMIN"] = (TFLOOR, "T_min of the temperature relation (K)")
+    header["HIT0"] = (TSURF, "T_max of the temperature relation (K)")
     header["HISSTAR"] = (SSTAR, "Sigma_star of the temperature relation, cm^-2")
     header["HIGAMMA"] = (GAMMA, "gamma of the temperature relation")
     return header
 
 
-def write_temperature(ftemp, f, good, wref, header, out, g0, waves, g0src="given", g0range=None):
+def outname(path, suffix):
+    """The name of an output: the input name without '.fits', in the directory of the input, followed by suffix."""
+    stem = path[:-5] if path.endswith(".fits") else path
+    return stem + suffix
+
+
+def write_temperature(ftemp, f, good, wref, header, out, g0, waves, g0src="(from command line)", g0range=None):
     """Dust temperature that goes with the corrected surface density.
 
-    The reconstruction derived the surface density from the reference
-    waveband with the temperature it fitted at the resolution of the
-    image. With f times more material on the line of sight, the
-    same intensity of the reference waveband is reproduced by colder dust,
-    whose Planck function is that of the fitted temperature divided by f. The
-    fitted temperature image must have the resolution and the pixels of the corrected image.
+    The reconstruction derived the surface density from the reference waveband with the temperature it fitted at the resolution
+    of the image. With f times more material on the line of sight, the same intensity of the reference waveband is reproduced by
+    colder dust, whose Planck function is that of the fitted temperature divided by f. The fitted temperature image must have the
+    resolution and the pixels of the corrected image. Pixels outside the coverage are undefined, and covered pixels without a
+    positive fitted temperature are 0, as in the Fortran version.
     """
-    t = np.nan_to_num(np.array(fits.open(ftemp)[0].data, float))
+    t = np.nan_to_num(np.array(fits.getdata(ftemp), float))
     if t.shape != f.shape:
-        print(" %s skipped: its shape does not match the corrected image"
-              % ftemp)
+        warn("the temperature image does not match the corrected image,")
+        say("   so no temperature map is written.")
         return
     ok = good & (t > 0.0)
-    tc = np.where(ok, invplanck(planck(np.where(ok, t, 1.0), wref)
-                                / np.where(ok, f, 1.0), wref), 0.0)
+    tc = np.where(ok, invplanck(planck(np.where(ok, t, 1.0), wref) / np.where(ok, f, 1.0), wref), 0.0)
+    tc = np.where(good, tc, np.nan)
     hh = stamp(header.copy(), g0, waves, g0src, g0range)
     hh["BUNIT"] = "K"
-    fits.PrimaryHDU(np.asarray(tc, np.float32), hh).writeto(out,
-                                                             overwrite=True)
-    print(" corrected dust temperature: median %.2f K -> %s"
-          % (np.median(tc[ok]), os.path.basename(out)))
+    say("   Writing output image '%s'" % out)
+    fits.PrimaryHDU(np.asarray(tc, np.float32), hh).writeto(out, overwrite=True)
+    if ok.any():
+        say("   Corrected dust temperature: median %.2f K" % np.median(tc[ok]))
 
 
 def main():
-    args = [a for a in sys.argv[1:] if not a.startswith("-")]
-    g0 = [float(a[4:]) for a in sys.argv[1:] if a.startswith("-g0=")]
-    g0src = "given" if g0 else "default"
-    g0 = g0[0] if g0 else 10.0
-    g0range = None
-    verbose = "-verb2" in sys.argv[1:]
-    bands = [a[7:] for a in sys.argv[1:] if a.startswith("-bands=")]
-    errors = [a[8:] for a in sys.argv[1:] if a.startswith("-errors=")]
-    known = ("-g0=", "-bands=", "-errors=", "-verb")
-    for a in sys.argv[1:]:
+    global CIRRUS_F, CAL_ERR, VERB
+    argv = sys.argv[1:]
+    for a in argv:
+        if a in ("-verb0", "-verb1", "-verb2", "-verb3"):
+            VERB = int(a[5])
+    args = [a for a in argv if not a.startswith("-")]
+    known = ("-g0=", "-bands=", "-errors=", "-verb0", "-verb1", "-verb2", "-verb3")
+    say("\n HICORRECT \u2022 Correct Bias of Surface Density Images (Python version)")
+    for a in argv:
         if a.startswith("-") and not a.startswith(known):
-            print(" ERROR: unknown option %s" % a)
+            error("unknown option %s" % a)
             return
     if len(args) not in (1, 2):
         if len(args) > 2:
-            print(" ERROR: too many images: give the surface density image to be corrected and, optionally, the temperature"
-                  " image fitted together with it")
+            error("too many images: give the surface density image to be corrected and, optionally, the temperature image"
+                  " fitted together with it")
         else:
             print(__doc__)
         return
+    if VERB == 1:
+        print(" HICORRECT: " + " ".join(argv))
+
+    g0 = [a[4:] for a in argv if a.startswith("-g0=")]
+    g0range = None
+    if g0:
+        try:
+            g0 = float(g0[0])
+        except ValueError:
+            error("cannot read the field from -g0=%s" % g0[0])
+            return
+        g0src = "(from command line)"
+    else:
+        g0, g0src = 10.0, "(default)"
+    bands = [a[7:] for a in argv if a.startswith("-bands=")]
+    errors = [a[8:] for a in argv if a.startswith("-errors=")]
+
     ftemp = args[1] if len(args) == 2 else None
     # the file names may be given without the extension '.fits', which is then added
     fits_name = lambda n: n if n.endswith(".fits") else n + ".fits"
     fbase = fits_name(args[0])
     if ftemp is not None:
         ftemp = fits_name(ftemp)
-    for name in [fbase] + ([ftemp] if ftemp is not None else []):
-        if not os.path.isfile(name):
-            print(" ERROR: %s does not exist" % name)
+
+    if bands:
+        items = [w for w in bands[0].split(",") if w.strip()]
+        if len(items) > MAXBANDS:
+            error("At most %d wavebands can be given with -bands=." % MAXBANDS)
             return
-    try:
-        given = [float(w) for w in bands[0].split(",") if w.strip()] if bands else [160.0, 250.0, 350.0, 500.0]
-    except ValueError:
-        print(" cannot read the wavelengths from -bands=%s" % bands[0])
-        return
-    if len(given) < 2:
-        print(" at least two wavebands must be given with -bands=")
-        return
-    if errors:
         try:
-            errs = [float(e) for e in errors[0].split(",") if e.strip()]
+            given = [float(w) for w in items]
         except ValueError:
-            print(" cannot read the calibration uncertainties from -errors=%s" % errors[0])
+            error("Cannot read the wavelengths from -bands=%s" % bands[0])
             return
-        if len(errs) != len(given) or min(errs) <= 0.0:
-            print(" -errors= must give one positive value for each waveband of -bands=, in the same order")
+        if len(given) < 3:
+            error("Too few wavebands specified (nfit < 3).")
+            return
+        if int(max(given)) <= 350:
+            error("The longest waveband of %d um is too short." % int(max(given)))
+            return
+    else:
+        given = [160.0, 250.0, 350.0, 500.0]
+    if errors:
+        items = [e for e in errors[0].split(",") if e.strip()]
+        if len(items) > MAXBANDS:
+            error("at most %d values can be given with -errors=." % MAXBANDS)
+            return
+        try:
+            errs = [float(e) for e in items]
+        except ValueError:
+            error("cannot read the calibration uncertainties from -errors=%s" % errors[0])
+            return
+        if len(errs) != len(given):
+            error("-errors= must give one value for each waveband of -bands=.")
+            return
+        if min(errs) <= 0.0:
+            error("the values of -errors= must be positive.")
             return
     else:
         errs = [0.20 if w <= 160.5 else 0.10 for w in given]
+
+    for name in [fbase] + ([ftemp] if ftemp is not None else []):
+        if not os.path.isfile(name):
+            error("'%s' does not exist." % name)
+            return
+
     order = np.argsort(given)
     waves = [given[i] for i in order]
     errs = [errs[i] for i in order]
-    global CIRRUS_F, CAL_ERR
     CAL_ERR = dict(zip(waves, errs))
+    say("   Computing effective attenuating columns (angular averages over %d directions)" % NANG)
+    say("   Shielding law T(s) = %.4e + (%.4e - %.4e) * (1 + s / %.4e)**(-%.5f) K" % (TFLOOR, TSURF, TFLOOR, SSTAR, GAMMA))
+    say("   Wavebands fitted: %s  reference wavelength: %d um" % (" ".join("%3d" % w for w in waves), waves[-1]))
+    say("   Relative calibration uncertainties: %s" % " ".join("%4.2f" % e for e in errs))
+
     key = cloud_key(waves, errs)
+    standard = key == STANDARD_KEY
     if key in CLOUD_TABLES:
         CIRRUS_F = CLOUD_TABLES[key]
     else:
         CIRRUS_F = CLOUD_TABLES[STANDARD_KEY]
-        print(" WARNING: no calibration on the diffuse cloud for these wavebands and weights; that of 160-500 um with the"
-              " standard weights is used, and diffuse material may be corrected by several percent too much or too little")
+        warn("no calibration on the diffuse cloud for these wavebands and weights;")
+        say("   that of 160-500 um with the standard weights is used, and diffuse material may be corrected")
+        say("   by several percent too much or too little.")
+
+    fitted, factor = build_relation(waves)
+    # The relation of uniform bodies declines above about 3e22 cm^-2, where such a body is nearly isothermal at the floor
+    # temperature; the radiative transfer models of concentrated cores do not, so the factor is held at its maximum there. The hold
+    # applies to the factor of G_0 = 10 only: the field factor, measured on the radiative transfer models, declines in strong
+    # fields, and that decline is real.
+    factor = np.maximum.accumulate(factor)
+
     hdu = fits.open(fbase)[0]
     if "HICORR" in hdu.header or str(hdu.header.get("CREATOR", "")).startswith("HICORRECT"):
-        print(" %s has already been corrected." % fbase)
-        print(" The correction is not idempotent and must be applied once"
-              " only.")
+        error("'%s' has already been corrected.\n   The correction is not idempotent and must be applied once only." % fbase)
         return
     base = np.nan_to_num(np.array(hdu.data, float))
+    good = base > 0.0
+    if not good.any():
+        error("the image has no positive pixel.")
+        return
     if is_temperature(base):
-        print(" ERROR: %s looks like a temperature image; the surface density image to be corrected must be given first" % fbase)
+        error("'%s' looks like a temperature image.\n   The surface density image to be corrected must be given first." % fbase)
         return
-    if ftemp is not None and not is_temperature(np.nan_to_num(np.array(fits.getdata(ftemp), float))):
-        print(" ERROR: %s does not look like a temperature image" % ftemp)
-        return
+    tdata = None
+    if ftemp is not None:
+        tdata = np.nan_to_num(np.array(fits.getdata(ftemp), float))
+        if tdata.shape == base.shape and not is_temperature(tdata):
+            error("'%s' does not look like a temperature image." % ftemp)
+            return
 
     # Without -g0=, the field is estimated from the fitted temperatures of the diffuse material (Appendix C.2 of the paper).
-    if g0src == "default" and ftemp is not None:
-        th = fits.getheader(ftemp)
-        tdata = np.nan_to_num(np.array(fits.getdata(ftemp), float))
+    beam = float(hdu.header.get("BEAM", 0.0) or 0.0)
+    if g0src == "(default)" and ftemp is not None:
         if tdata.shape != base.shape:
-            print(" WARNING: the temperature image does not match the image; the field cannot be estimated, and G_0 = 10 is used")
+            warn("Temperature image does not match the image; the field cannot be estimated, and G_0 = 10 is used")
         else:
-            est = estimate_field(base, tdata, verbose)
+            est = estimate_field(np.where(good, base, 0.0), tdata, VERB >= 2)
             if est is None:
-                print(" WARNING: too few pixels between 10^%.1f and 10^%.1f cm^-2 to estimate the field; G_0 = 10 is used"
-                      % (TX0, TXFIELD))
+                warn("Too few pixels between 10^%.1f and 10^%.1f cm^-2 to estimate the field; G_0 = 10 is used"
+                     % (TX0, TXFIELD))
             else:
                 g16, g50, g84, hot, ndif = est
-                g0, g0src, g0range = round2(g50), "estimated", (g16, g84)
-                print(" radiation field estimated from %d pixels of the diffuse material (10^%.1f to 10^%.1f cm^-2):"
-                      " G_0 = %.3g (%.3g to %.3g at the 16th and 84th percentiles of the temperature), used as G_0 = %g;"
-                      " %.1f%% of the pixels are warmer than the strongest field allows"
-                      % (ndif, TX0, TXFIELD, g50, g16, g84, g0, 100.0 * hot))
+                g0, g0src, g0range = round2(g50), "(estimated from images)", (g16, g84)
+                say("   Radiation field G_0 estimated from %d pixels in the diffuse material (10^%.1f to 10^%.1f cm^-2):"
+                    % (ndif, TX0, TXFIELD))
+                say("   G_0 = %8.2f (%8.2f to %8.2f at the 16th and 84th percentiles of the temperature)" % (g50, g16, g84))
+                say("   Pixels warmer than the strongest field allows: %5.1f%%" % (100.0 * hot))
                 # the area of the healthy pixels: surface densities of at least 10^19 cm^-2 (lower values, which some
                 # methods produce around the usable area, are taken as bad) and positive temperatures; the smallest observed
                 # Herschel maps have about 2000 x 2000 pixels of 3 arcsec, and a smaller area is probably a cutout, whose
@@ -728,83 +782,69 @@ def main():
                 hd = hdu.header
                 dx = abs(hd.get("CDELT1", hd.get("CD1_1", 0.0))) * 3600.0
                 dy = abs(hd.get("CDELT2", hd.get("CD2_2", 0.0))) * 3600.0
-                ngood = int(((base >= 1.0e19) & (tdata > 0.0)).sum())
+                ngood = int((good & (base >= 1.0e19) & (tdata > 0.0)).sum())
                 area = ngood * dx * dy / 6000.0 ** 2 if dx > 0.0 and dy > 0.0 else ngood / 2000.0 ** 2
                 if area < 1.0:
-                    print(" WARNING: the image appears to be a cutout of a larger map; estimate the field from the full map")
-                beam = hdu.header.get("BEAM", th.get("BEAM", 0.0))
-                if beam and abs(beam / 13.5 - 1.0) > 0.01:
-                    print(" WARNING: the field was estimated with the model temperatures of 13.5 arcsec images; at %.4g arcsec"
-                          " it is approximate" % beam)
-                if key != STANDARD_KEY:
-                    print(" WARNING: the field was estimated with the model temperatures of 160-500 um with the standard"
-                          " weights; for these wavebands or weights it is approximate")
-    elif g0src == "default":
-        print(" no temperature image given, so the field cannot be estimated; G_0 = 10 is used")
-    if g0 != 10.0 and key != STANDARD_KEY:
-        print(" WARNING: the field factor was measured with 160-500 um and the standard weights; for other wavebands or"
-              " weights it is approximate")
-    fitted, factor = build_relation(waves)
-    # The relation of uniform bodies declines above about 3e22 cm^-2, where such a body is nearly isothermal at the floor
-    # temperature; the radiative transfer models of concentrated cores do not, so the factor is held at its maximum there. The hold
-    # applies to the factor of G_0 = 10 only: the field factor, measured on the radiative transfer models, declines in strong
-    # fields, and that decline is real.
-    factor = np.maximum.accumulate(factor)
+                    warn("the image appears to be a cutout of a larger map; estimate the field from the full map.")
+                if beam > 0.0 and abs(beam / 13.5 - 1.0) > 0.01:
+                    warn("the field was estimated with the model temperatures of 13.5 arcsec images; at %7.2f arcsec it is"
+                         " approximate." % beam)
+                if not standard:
+                    warn("The field was estimated with the model temperatures of 160-500 um with standard weights; for"
+                         " these wavebands or weights it is approximate.")
+    elif g0src == "(default)":
+        say("   No temperature image given, so the field strength cannot be estimated")
+
+    say("   Radiation field G_0 = %8.2e %s" % (g0, g0src))
+    if g0 < GFIELD[0] or g0 > GFIELD[-1]:
+        warn("G_0 = %8.2e is outside the grid; the field factor g for the nearest G_0 is used" % g0)
+    if g0 != 10.0 and not standard:
+        warn("The field factor was measured for 160-500 um and standard weights; for other wavebands or weights it is"
+             " approximate")
     if g0 != 10.0:
-        if g0 < GFIELD[0] or g0 > GFIELD[-1]:
-            print(" WARNING: G_0 = %g lies outside the grid of radiation fields (%g to %g);"
-                  " the field factor of the nearest field is used" % (g0, GFIELD[0], GFIELD[-1]))
-        factor = factor * field_factor(np.log10(fitted), g0)
+        factor = factor * field_factor(np.log10(fitted), g0)      # Eq. (9)
+    if VERB >= 3:
+        print("   Tabulated relation: fitted surface density and factor that restores the true one")
+        for i in range(0, NTABLE, 20):
+            print("    %11.4e %7.4f" % (fitted[i], factor[i]))
 
     # Eq. (10): the factor of every pixel, interpolated in log Sigma_F on the table and held at its end values outside it (the
-    # table spans 10^20-10^24 cm^-2 in true surface density); pixels that are not positive carry no surface density and keep 1
-    good = base > 0.0
-    f = np.where(good, np.interp(np.log10(np.maximum(base, 1.0)),
-                                 np.log10(fitted), factor,
+    # table spans 10^20-10^24 cm^-2 in true surface density); pixels that are not positive carry no surface density
+    f = np.where(good, np.interp(np.log10(np.maximum(base, 1.0)), np.log10(fitted), factor,
                                  left=factor[0], right=factor[-1]), 1.0)
-
     delta = np.where(good, (f - 1.0) * base, 0.0)
-
-    print(" wavebands used: %s micron; reference %.0f micron; relative calibration uncertainties %s"
-          % (", ".join("%.0f" % w for w in waves), waves[-1], ", ".join("%g" % CAL_ERR[w] for w in waves)))
-    print(" T(Sigma_a) = %.4f + (%.4f - %.4f) (1 + Sigma_a / %.4e)^-%.5f K"
-          % (TFLOOR, TSURF, TFLOOR, SSTAR, GAMMA))
-    print(" effective attenuating column from an angular average over %d"
-          " directions, uniform structures, sphere and layer averaged;" % NANG)
-    print(" below 10^%.1f cm^-2 the layer is replaced by a RADMC-3D cloud,"
-          " blended into the analytic relation up to 10^%.1f cm^-2" % XBLEND)
-    print(" radiation field G_0 = %g (Habing units), %s%s" % (g0, g0src, "" if g0 != 10.0 else ", the field of the calibration"))
-    print(" image %s: %d valid pixels" % (os.path.basename(fbase),
-                                               int(good.sum())))
+    say("   Valid pixels in the image: %12.6e  minmax corrections: %6.4f %6.4f" % (good.sum(), f[good].min(), f[good].max()))
+    say("   Ratio of the corrected to uncorrected sums: %7.4f" % ((base + delta)[good].sum() / base[good].sum()))
     p = np.percentile(f[good], [1, 25, 50, 75, 99])
-    print(" correction factor  1%%: %.3f  25%%: %.3f  50%%: %.3f  75%%: %.3f"
-          "  99%%: %.3f  max: %.3f" % (*p, f[good].max()))
-    print(" ratio of the sums of the corrected to the uncorrected image:"
-          " %.4f" % ((base + delta)[good].sum() / base[good].sum()))
+    say("   Correction factors at 1, 25, 50, 75, 99%%: %6.4f %6.4f %6.4f %6.4f %6.4f" % tuple(p))
 
-    out = np.where(good, base + delta, 0.0)
+    # the outputs, written to the directory containing the inputs; pixels outside the coverage are undefined
+    bunit = str(hdu.header.get("BUNIT", "")).strip() or "cm-2"
+    out = outname(fbase, ".cfactor.fits")
     hh = stamp(hdu.header.copy(), g0, waves, g0src, g0range)
-    hh["BUNIT"] = "H2/cm^2"
-    # the outputs are written to the current directory, whatever directory the input comes from
-    name = os.path.basename(fbase)
-    stem = name[:-5] if name.endswith(".fits") else name
-    fits.PrimaryHDU(np.asarray(out, np.float32), hh).writeto(stem + ".correct.fits", overwrite=True)
-    print(" written %s.correct.fits" % os.path.basename(stem))
-    hh2 = stamp(hdu.header.copy(), g0, waves, g0src, g0range)
-    hh2["BUNIT"] = "ratio"
-    fits.PrimaryHDU(np.asarray(np.where(good, f, 0.0), np.float32), hh2).writeto(stem + ".cfactor.fits", overwrite=True)
-    print(" written %s.cfactor.fits" % os.path.basename(stem))
-    if ftemp is None:
-        print(" no temperature image given, so no temperature map is written")
-        return
-    th = fits.getheader(ftemp)
-    b1, b2 = hdu.header.get("BEAM", 0.0), th.get("BEAM", 0.0)
-    if b1 and b2 and abs(b2 / b1 - 1.0) > 0.01:
-        print(" ERROR: the temperature image has the resolution %.2f arcsec, the surface density image %.2f arcsec;"
-              " they must have the same resolution, so no temperature map is written" % (b2, b1))
-        return
-    write_temperature(ftemp, f, good, waves[-1], hdu.header,
-                      (os.path.basename(ftemp)[:-5] if ftemp.endswith(".fits") else os.path.basename(ftemp)) + ".correct.fits", g0, waves, g0src, g0range)
+    hh["BUNIT"] = "ratio"
+    say("   Writing output image '%s'" % out)
+    fits.PrimaryHDU(np.asarray(np.where(good, f, np.nan), np.float32), hh).writeto(out, overwrite=True)
+    out = outname(fbase, ".correct.fits")
+    hh = stamp(hdu.header.copy(), g0, waves, g0src, g0range)
+    hh["BUNIT"] = bunit
+    say("   Writing output image '%s'" % out)
+    fits.PrimaryHDU(np.asarray(np.where(good, base + delta, np.nan), np.float32), hh).writeto(out, overwrite=True)
+
+    if ftemp is not None:
+        if tdata.shape != base.shape:
+            warn("the temperature image does not match the corrected image,")
+            say("   so no temperature map is written.")
+        else:
+            tbeam = float(fits.getheader(ftemp).get("BEAM", 0.0) or 0.0)
+            if beam > 0.0 and tbeam > 0.0 and abs(tbeam / beam - 1.0) > 0.01:
+                error("the temperature image has the resolution %7.2f arcsec, the surface density image %7.2f arcsec.\n"
+                      "   They must have the same resolution; no temperature map is written." % (tbeam, beam))
+                return
+            write_temperature(ftemp, f, good, waves[-1], hdu.header, outname(ftemp, ".correct.fits"), g0, waves, g0src,
+                              g0range)
+    say("\n Done.\n")
+
 
 if __name__ == "__main__":
     main()

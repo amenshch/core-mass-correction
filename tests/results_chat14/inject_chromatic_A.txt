@@ -1,0 +1,10 @@
+training: 30022 samples on 1597 nodes, 40.2% super-critical
+
+Test A: injected sources re-extracted by getsf, pooled over the four seeds and
+the four variants.  710 matched sources with all observables finite, of which
+3.4% are truly super-critical, so always answering with the commoner class
+would score 96.6%.
+  four observables                     accuracy  97.5%  super-critical found  91.7%  sub-critical kept  97.7%
+  four observables plus size ratios    accuracy  56.1%  super-critical found  83.3%  sub-critical kept  55.1%
+  median ratio of the getsf 500 to 250 micrometre sizes: 1.279; on the model side
+  the same ratio has median 1.118

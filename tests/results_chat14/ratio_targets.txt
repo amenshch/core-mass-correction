@@ -1,0 +1,31 @@
+Building recovery samples from cats/bes_model_grid_final3_catalog + cats/bes_model_grid_final3_recovery_tables ...
+Recovery samples built: 30022 samples from 1597/1840 nodes, in 17.5s
+samples scored: 30022 on 1597 nodes
+
+Accuracy of the inversion, every sample scored, node withheld.
+The upper block predicts quantities directly; the lower block predicts the ratio
+of the quantity to its observational counterpart, which is then applied to the
+measured value.
+
+  truncation radius xi_max                       n= 30022  typical error  0.177 dex  scatter  1.92  within 1.5x  50%
+  Bonnor-Ebert radius R_BE                       n= 30022  typical error  0.000 dex  scatter  1.00  within 1.5x 100%
+  mass-averaged temperature Td_avg               n= 30022  typical error  0.006 dex  scatter  1.07  within 1.5x 100%
+  stability parameter alpha                      n= 30022  typical error  0.095 dex  scatter  1.88  within 1.5x  63%
+
+  mass factor C_M = M_BE/M_ex                    n= 30022  typical error  0.028 dex  scatter  1.14  within 1.5x  99%
+  size factor C_R = R_BE/R_dec                   n= 30022  typical error  0.049 dex  scatter  1.32  within 1.5x  86%
+  temperature factor C_T = Td_avg/T_SED          n= 30022  typical error  0.003 dex  scatter  1.03  within 1.5x 100%
+  stability factor C_alpha = a_true/a_obs        n= 30022  typical error  0.043 dex  scatter  1.24  within 1.5x  93%
+
+Stability classification, every sample scored.  "found" is the percentage of
+truly super-critical samples so called, "kept" the percentage of truly
+sub-critical samples so called.  The columns after the bar give the accuracy in
+bins of the measured footprint ratio phi: 1.0-1.4, 1.4-1.7, 1.7-1.9, 1.9-2.1, 2.1-2.5, 2.5-4.0.
+
+  conventional, alpha_obs <= 2                overall  73.4%  found 100.0%  kept  55.6%  |  83.0  55.8  69.0  73.5  76.6  81.1
+  conventional, alpha_obs <= 1                overall  86.1%  found  96.1%  kept  79.3%  |  94.7  82.2  80.5  81.7  84.3  87.3
+  inversion of xi_max                         overall  89.5%  found  87.2%  kept  91.1%  |  96.6  84.0  82.4  85.1  90.0  93.6
+  corrected alpha = C_alpha x alpha_obs <= 1  overall  75.5%  found  45.6%  kept  95.7%  |  95.8  89.1  78.7  67.9  65.1  54.9
+
+  fraction of samples truly super-critical: 40.2%
+  median measured footprint ratio phi: 1.84

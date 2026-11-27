@@ -1,0 +1,25 @@
+Building recovery samples from cats/bes_model_grid_final3_catalog + cats/bes_model_grid_final3_recovery_tables ...
+Recovery samples built: 30022 samples from 1597/1840 nodes, in 19.8s
+Typical error, in decimal exponents, of each estimate of the intrinsic half-maximum
+width.  Columns after the bar give it in bins of the resolvedness H/O = 1.0-1.3, 1.3-1.6, 1.6-2.0, 2.0-3.0, 3.0-10.0.
+
+  SD band, beam 13.5 arcsec: 30022 samples, median H/O 1.95, unresolved (H/O<1) 0%
+     measured width, undeconvolved    n=30022  median  0.907  typical error  0.124 dex  |  0.227  0.145  0.091  0.075  0.111
+     Gaussian deconvolution           n=30018  median  0.755  typical error  0.151 dex  |  0.285  0.158  0.114  0.105  0.121
+     grid inversion, node withheld    n=30022  median  0.980  typical error  0.049 dex  |  0.131  0.051  0.032  0.040  0.041
+
+  250 band, beam 18.2 arcsec: 25710 samples, median H/O 1.99, unresolved (H/O<1) 0%
+     measured width, undeconvolved    n=25710  median  1.048  typical error  0.150 dex  |  0.220  0.171  0.148  0.140  0.118
+     Gaussian deconvolution           n=25708  median  0.831  typical error  0.169 dex  |  0.257  0.196  0.160  0.146  0.122
+     grid inversion, node withheld    n=25710  median  0.987  typical error  0.030 dex  |  0.046  0.030  0.030  0.031  0.022
+
+  350 band, beam 24.9 arcsec: 19371 samples, median H/O 1.89, unresolved (H/O<1) 0%
+     measured width, undeconvolved    n=19371  median  0.980  typical error  0.130 dex  |  0.189  0.146  0.132  0.130  0.094
+     Gaussian deconvolution           n=19366  median  0.771  typical error  0.164 dex  |  0.284  0.181  0.152  0.142  0.099
+     grid inversion, node withheld    n=19371  median  0.989  typical error  0.026 dex  |  0.029  0.024  0.030  0.030  0.021
+
+  500 band, beam 36.3 arcsec: 13328 samples, median H/O 1.75, unresolved (H/O<1) 0%
+     measured width, undeconvolved    n=13328  median  0.934  typical error  0.125 dex  |  0.152  0.148  0.139  0.117  0.074
+     Gaussian deconvolution           n=13327  median  0.717  typical error  0.165 dex  |  0.301  0.184  0.175  0.143  0.077
+     grid inversion, node withheld    n=13328  median  0.993  typical error  0.024 dex  |  0.021  0.028  0.033  0.029  0.015
+

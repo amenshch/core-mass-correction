@@ -1,0 +1,15 @@
+Building recovery samples from cats/bes_model_grid_final3_catalog + cats/bes_model_grid_final3_recovery_tables ...
+Recovery samples built: 30022 samples from 1597/1840 nodes, in 11.9s
+/home/claude/proj/clouds/extra_observables.py:142: RuntimeWarning: invalid value encountered in log10
+  lg(get('FX160') / get('FX250')),
+samples 26291 on 1408 nodes; truly super-critical 39.0%
+
+Classification accuracy, node withheld, probability above 0.5.
+Columns after the bar: accuracy in bins of the measured footprint factor phi =
+1.0-1.4, 1.4-1.7, 1.7-1.9, 1.9-2.1, 2.1-2.5, 2.5-4.0.  Real catalogues have median phi between 1.83 and 2.08.
+
+  four observables                   overall  90.3%  found  85.8%  kept  93.2%  |  97.7  84.2  82.0  86.0  91.0  94.6
+  + per-band size ratios             overall  97.6%  found  95.7%  kept  98.8%  |  99.5  96.4  96.7  96.3  96.9  98.0
+  + spectral colours                 overall  97.0%  found  96.1%  kept  97.6%  |  99.3  95.5  96.7  95.8  95.8  97.8
+  + both                             overall  97.3%  found  96.2%  kept  98.0%  |  99.3  96.3  96.6  96.3  96.4  97.7
+  sizes and colours only             overall  95.8%  found  94.9%  kept  96.5%  |  98.9  95.1  94.6  93.8  94.9  95.4

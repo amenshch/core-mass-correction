@@ -1,0 +1,18 @@
+samples 30022, truly super-critical 40.2%
+
+alpha_true evaluated exactly, i.e. with the model's own radius, temperature and mass:
+  median alpha_true for truly sub-critical models: 2.718
+  median alpha_true for truly super-critical models: 1.036
+  threshold alpha_true <= 0.50 : accuracy 59.8%
+  threshold alpha_true <= 0.75 : accuracy 59.8%
+  threshold alpha_true <= 1.00 : accuracy 75.6%
+  threshold alpha_true <= 1.50 : accuracy 82.0%
+  threshold alpha_true <= 2.00 : accuracy 75.5%
+  threshold alpha_true <= 2.50 : accuracy 71.5%
+  threshold alpha_true <= 3.00 : accuracy 68.1%
+
+alpha_obs, the observer's version:
+  median alpha_obs for truly sub-critical: 2.380 ; super-critical: 0.445
+  best threshold for alpha_obs: 0.75, accuracy 88.8%
+    within phi 1.7-1.9: best threshold 0.80, accuracy 84.0% (n=3543)
+    within phi 1.9-2.1: best threshold 0.75, accuracy 83.1% (n=2540)

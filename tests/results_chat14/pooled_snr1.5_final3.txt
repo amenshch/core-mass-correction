@@ -1,0 +1,82 @@
+Correctors trained on:
+  cats/bes_model_grid_final3_catalog
+  cats/bes_model_grid_final3_recovery_tables
+
+pooling 4 seeds: 260811_cmf2p00_n600_s2030, 260812_cmf2p00_n600_s2031, 260813_cmf2p00_n600_s2032, 260814_cmf2p00_n600_s2033
+
+run                     injected   recovered    fraction
+as placed                   2398         195          8%
+flattened                   2398         230         10%
+isolated                    1218         147         12%
+flattened+isolated          1218         138         11%
+
+Recovered injected cores against the real Aquila sources
+  quantity (median)                injected       real KS / probability
+  background column (cm^-2)       6.046e+21  5.036e+21    0.142 / 0.0024
+  contrast                            1.535      1.235    0.650 / 6.9e-67
+  measured size AFWHM (arcsec)        39.33      37.78    0.186 / 2e-05
+  rank correlation of contrast on column: injected -0.027, real +0.507
+
+==========================================================================
+Effect of the cloud fluctuations (flattening), at fixed isolation
+==========================================================================
+
+  with neighbours present  (113 cores recovered in both)
+   as placed
+    uncorrected            n=113  median 0.713  scatter 1.84  within 2x  73%  median |log10| 0.208
+    three observables      n=113  median 0.980  scatter 1.88  within 2x  76%  median |log10| 0.143
+    four observables       n=113  median 0.870  scatter 1.85  within 2x  81%  median |log10| 0.188
+   flattened
+    uncorrected            n=113  median 0.728  scatter 1.57  within 2x  84%  median |log10| 0.159
+    three observables      n=113  median 1.019  scatter 1.60  within 2x  88%  median |log10| 0.097
+    four observables       n=113  median 0.888  scatter 1.58  within 2x  90%  median |log10| 0.108
+   paired difference in log10 of the ratio, as placed minus flattened
+    uncorrected            median -0.008 dex (p=0.94); scatter 1.85 versus 1.58
+    three observables      median +0.006 dex (p=0.81); scatter 1.89 versus 1.60
+    four observables       median -0.007 dex (p=0.97); scatter 1.85 versus 1.58
+
+  with neighbours removed  (76 cores recovered in both)
+   isolated
+    uncorrected            n= 76  median 0.816  scatter 1.96  within 2x  78%  median |log10| 0.180
+    three observables      n= 76  median 1.052  scatter 2.06  within 2x  68%  median |log10| 0.153
+    four observables       n= 76  median 0.974  scatter 1.97  within 2x  74%  median |log10| 0.143
+   flattened+isolated
+    uncorrected            n= 76  median 0.769  scatter 1.46  within 2x  89%  median |log10| 0.143
+    three observables      n= 76  median 0.996  scatter 1.49  within 2x  92%  median |log10| 0.092
+    four observables       n= 76  median 0.916  scatter 1.46  within 2x  91%  median |log10| 0.096
+   paired difference in log10 of the ratio, isolated minus flattened+isolated
+    uncorrected            median +0.032 dex (p=0.077); scatter 1.97 versus 1.46
+    three observables      median +0.035 dex (p=0.055); scatter 2.07 versus 1.49
+    four observables       median +0.029 dex (p=0.075); scatter 1.97 versus 1.47
+
+==========================================================================
+Effect of blending between injected cores (isolation), at fixed flattening
+==========================================================================
+
+  with the cloud fluctuations present  (108 cores recovered in both)
+   as placed
+    uncorrected            n=108  median 0.920  scatter 2.34  within 2x  67%  median |log10| 0.200
+    three observables      n=108  median 1.343  scatter 2.41  within 2x  63%  median |log10| 0.228
+    four observables       n=108  median 1.103  scatter 2.34  within 2x  69%  median |log10| 0.219
+   isolated
+    uncorrected            n=108  median 0.966  scatter 2.39  within 2x  68%  median |log10| 0.195
+    three observables      n=108  median 1.412  scatter 2.49  within 2x  60%  median |log10| 0.227
+    four observables       n=108  median 1.178  scatter 2.41  within 2x  66%  median |log10| 0.200
+   paired difference in log10 of the ratio, as placed minus isolated
+    uncorrected            median -0.001 dex (p=0.023); scatter 2.34 versus 2.40
+    three observables      median -0.002 dex (p=0.028); scatter 2.42 versus 2.50
+    four observables       median -0.001 dex (p=0.03); scatter 2.35 versus 2.42
+
+  with the cloud fluctuations removed  (95 cores recovered in both)
+   flattened
+    uncorrected            n= 95  median 0.728  scatter 1.57  within 2x  79%  median |log10| 0.146
+    three observables      n= 95  median 0.997  scatter 1.60  within 2x  84%  median |log10| 0.115
+    four observables       n= 95  median 0.891  scatter 1.57  within 2x  83%  median |log10| 0.102
+   flattened+isolated
+    uncorrected            n= 95  median 0.790  scatter 1.56  within 2x  85%  median |log10| 0.153
+    three observables      n= 95  median 1.073  scatter 1.59  within 2x  85%  median |log10| 0.107
+    four observables       n= 95  median 0.950  scatter 1.56  within 2x  89%  median |log10| 0.105
+   paired difference in log10 of the ratio, flattened minus flattened+isolated
+    uncorrected            median -0.010 dex (p=0.00045); scatter 1.58 versus 1.56
+    three observables      median -0.015 dex (p=0.0032); scatter 1.61 versus 1.59
+    four observables       median -0.010 dex (p=0.00064); scatter 1.57 versus 1.56
