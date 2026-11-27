@@ -45,6 +45,13 @@ flattened run.
 
 ## 3. Seven clouds, final3 corrector, threshold 1.5
 
+**Correction (chat 24):** the medians below are those of the THREE-observable
+factor (column C_M of the version-6 catalogs).  The adopted four-observable
+factor (column C_M_4D there, C_M in version 7) has medians 1.28, 1.27, 1.25,
+1.26, 1.30, 1.21, 1.30 for the same clouds (1.21-1.30).  The CMF slopes, the
+within-cloud spread, and the bound fractions of Sect. 4 were computed with the
+four-observable factor and stand.
+
 Median correction factor: 1.36, 1.40, 1.43, 1.42, 1.41, 1.39, 1.45 for
 Scorpius, Ophiuchus, Aquila, Orion A, California, Cygnus X, W3/W4/W5 — a spread
 of 7 per cent over 130 to 1700 pc with no distance trend. On final2 Scorpius was

@@ -2809,8 +2809,12 @@ $0.012$ in both tests.
 \subsection{The correction is nearly uniform within a cloud}
 \label{sec:practice-uniform}
 
-Across seven clouds spanning 130--1700 pc the median $C_M$ lies between $1.36$
-and $1.45$, a spread of 7\%, with no trend against distance. Within a cloud the
+% Medians of the four-observable C_M over the corrected QUALITY=ok sources of each cloud:
+% tests/run_clouds.py with method/mass_correction_pipeline_7.py, final3 grid, S/N 1.5,
+% output data/results/clouds_v7/run_summary.cat (column C_M).  Chat 14 had quoted 1.36--1.45,
+% which are the medians of the three-observable factor (column C_M_3D there).
+Across seven clouds spanning 130--1700 pc the median $C_M$ lies between $1.21$
+and $1.30$, a spread of 8\%, with no trend against distance. Within a cloud the
 factor spans only $1.14$--$1.65$ between its tenth and ninetieth percentiles.
 It is anti-correlated with reported mass (rank correlation $-0.36$ to $-0.56$)
 and with background surface density ($-0.41$ to $-0.68$): the cores whose masses
@@ -2828,7 +2832,7 @@ making explicitly.
 \subsection{Consequences that a threshold amplifies}
 \label{sec:practice-bound}
 
-A uniform 30\% mass shift is absorbed by a slope but not by a threshold. Using
+A nearly uniform mass shift of 20--30\% is absorbed by a slope but not by a threshold. Using
 the conventional criterion, a core counting as bound when
 $\alpha_{\rm BE}=M_{\rm crit}/M \le 2$ with
 $M_{\rm crit}=2.4\,R\,c_{\rm s}^2/G$, the bound fraction over 5574 resolved
