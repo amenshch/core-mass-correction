@@ -53,6 +53,10 @@ CLOUDS = [('Scorpius', 130), ('Ophiuchus', 144), ('Aquila', 260),
           ('OrionA', 432), ('California', 470), ('CygnusX', 1150),
           ('W3W4W5', 1700)]
 
+# Sub-field extractions differing only in the surface density band:
+# <SUBFIELD_DIR>/uncorrected and <SUBFIELD_DIR>/hicorrected.
+SUBFIELD_DIR = os.path.join(REPO, 'data', 'subfield', 'Aquila')
+
 # ---------------------------------------------------------------- injections
 INJECTION_DIR = os.path.join(REPO, 'data', 'injections')
 BGSCAN_DIR = os.path.join(INJECTION_DIR, 'bgscan')

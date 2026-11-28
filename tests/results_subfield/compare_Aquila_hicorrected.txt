@@ -1,0 +1,31 @@
+Comparison of two extractions of /home/claude/amenshch/core-mass-correction/data/subfield/Aquila (distance 260 pc)
+uncorrected: Aquila.s.sources.ok.cat=Aquila.s.sources.ok.add.cat
+hicorrected: Aquila.s.sources.ok.cat=Aquila.s.sources.ok.add.cat
+
+1. Detections inside the common area (all sources of the merged catalogs)
+  uncorrected 265, hicorrected 274, matched within 6 arcsec: 226
+  only in uncorrected: 39, only in hicorrected: 48
+
+  sources only in uncorrected: median PEAK^SRC 2.76e+21, median PEAK^BGF 1.14e+22 cm^-2
+  sources only in hicorrected: median PEAK^SRC 1.35e+22, median PEAK^BGF 2.76e+22 cm^-2
+
+2. Ratio hicorrected/uncorrected for matched sources (surface density band)
+  background PEAK^BGF (Sigma)            n  226   median  1.965   10th  1.518   90th  2.196
+  peak above background PEAK^SRC         n  226   median  2.677   10th  2.192   90th  3.307
+  contrast (1 + PEAK^SRC/PEAK^BGF)       n  226   median  1.102   10th  1.000   90th  1.288
+  concentration zeta                     n  226   median  0.994   10th  0.844   90th  1.113
+  footprint factor phi                   n  226   median  0.999   10th  0.899   90th  1.097
+  footprint radius theta                 n  226   median  0.994   10th  0.861   90th  1.105
+
+3. Mass correction (QUALITY=ok SED fits, common area)
+  corrected sources: uncorrected 55, hicorrected 53, matched 37
+  uncorrected: median C_M 1.209, median C_M_3D 1.420, IN_DOMAIN 54 of 55
+  hicorrected: median C_M 1.174, median C_M_3D 1.482, IN_DOMAIN 47 of 53
+  ratios hicorrected/uncorrected over matched sources:
+  reported mass M_INIT                   n   37   median  1.076   10th  0.807   90th  1.347
+  SED temperature T_INIT                 n   37   median  1.000   10th  0.949   90th  1.064
+  correction factor C_M                  n   37   median  0.975   10th  0.871   90th  1.030
+  corrected mass M_CORR                  n   37   median  1.041   10th  0.740   90th  1.351
+  C_M_3D                                 n   37   median  0.996   10th  0.793   90th  1.196
+
+Ratios: 10th, 50th (median), and 90th percentiles over the matched sources.
